@@ -27,7 +27,7 @@
 $query=$_POST['filter'].$_POST['searchTerm'];
 
 $start = 0;
-$rows = 10;
+$rows = 300;
 $options = array(
   'fl' => '*,score',
 ); 
@@ -42,9 +42,9 @@ $responses = array();
 
 foreach ($response->response->docs as $docNum =>$doc){
 
-    $author=$doc->getField('author');
+    $author=$doc->getField('authors');
     $body=$doc->getField('body');
-    $title=$doc->getField('attr_title');
+    $title=$doc->getField('sup_title');
     $id=$doc->getField('id');
     $name=$doc->getField('attr_stream_name');
 
@@ -53,9 +53,9 @@ foreach ($response->response->docs as $docNum =>$doc){
 }
 
 foreach($responses as $resp){
-  //  echo $resp->format();
-    printer($resp);
-    echo"<br><br><br>";
+    //printer($resp);
+    if(strcmp(preg_replace('/\s\s+/', '', $resp->body),"")==0)
+            echo $resp->id."<br>";
 }
 
 //printer($response->response->docs);
