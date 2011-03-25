@@ -25,11 +25,12 @@ and open the template in the editor.
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Full Body Search Demo</title>
+        <title>Online Discourse Search Engine</title>
         <link rel="stylesheet" href="style.css" type="text/css" />
     </head>
     <body>
-        <? include $mainContentFile; ?>
-
+        <div id="content">
+            <? include $mainContentFile; ?>
+        </div>
     </body>
 </html>
