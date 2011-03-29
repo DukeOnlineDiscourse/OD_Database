@@ -5,6 +5,12 @@ function startsWith($haystack,$needle,$case=true) {
     return (strcasecmp(substr($haystack, 0, strlen($needle)),$needle)===0);
 }
 
+function printer($arr){
+   echo"<pre>";
+   print_r($arr);
+   echo"</pre>";
+}
+
 
 $con = mysql_connect('localhost:8888', 'root', 'root');
     if (!$con)
@@ -14,7 +20,7 @@ $con = mysql_connect('localhost:8888', 'root', 'root');
     mysql_select_db("newOnlineDiscourse", $con);
 
 
-$query = "SELECT * FROM cd_file_table WHERE 'ignore'=0 AND id=36";
+$query = "SELECT * FROM cd_file_table WHERE `ignore`=0";
 
 $result = mysql_query($query);
 if (!$result) {
@@ -22,13 +28,7 @@ if (!$result) {
 }
 $count=0;
 while($row = mysql_fetch_assoc($result)) {
-    $source="";
-    if(startswith($row['filename'],"www"))
-        $source = urlencode("http://".$row['filename']);
-    else
-        $source = urlencode("http://www.".$row['filename']);
-
-   // echo $source."<br>";
+    $source = urlencode("http://".$row['filename']);
     $desc="literal.desc=".$row['description'];
     $title =urlencode($row['title']);
     $authors=$row['authors'];
@@ -47,7 +47,7 @@ while($row = mysql_fetch_assoc($result)) {
     $id = $row['id'];
 
     $url="http://localhost:8983/solr/update/extract?";
-    $params="uprefix=attr_&literal.id=".$id."&literal.sup_title=".$title."&wt=json&extractOnly=true";
+    $params="uprefix=attr_&literal.id=".$id."&literal.sup_title=".$title."&wt=json";
     foreach($authFin as $author){
         $params.="&literal.authors=".urlencode($author);
     }
@@ -56,19 +56,38 @@ while($row = mysql_fetch_assoc($result)) {
     $url.=$params;
     $ch = curl_init($url);
 
-    echo $url."<br>";
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $desc);
-   // curl_setopt($ch,CURLOPT_AUTOREFERER,true);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($ch,CURLOPT_POSTFIELDS, $desc);
+   curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
 
+    $jsonResp;
+    $resp=curl_exec($ch);
+    $success=true;
+    if(strpos($resp,"java.net.UnknownHostException:")!=false) {
+        $success=false;
+    }else{
+        if($resp!=false){
+            $jsonResp=json_decode($resp);
+            if($jsonResp->responseHeader->status!=0){
+                 $success=false;
+            }
+            else {
+                $count++;
+                //echo $id.", ";
+           }
+        }else
+            $success=false;
+    }
+    if (!$success){
+        echo "fail: ".$id."<br>";
+        $query="Update cd_file_table
+            SET `fail`=1
+            WHERE id=".$id;
+        mysql_query($query);
+    }
+   curl_close($ch);
 
-    $resp=json_decode(curl_exec($ch));
-    if($resp->responseHeader->status!=0)
-            echo "fail ". $id."<br>";
-    else echo"success ".$id." ".$row['title']." "."<br>";
-    curl_close($ch);
-    $count++;
-    break;
 }
+
+echo "<br>".$count;
 
 ?>
