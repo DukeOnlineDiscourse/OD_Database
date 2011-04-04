@@ -11,7 +11,7 @@ function validateForm(){
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
         <label for="searchTerm"><h1>Online Discourse</h1></label><input type="text" name="searchTerm" id="searchBox"/>
-        <input type="hidden" name="startResp" value="1"/>
+        <input type="hidden" name="startResp" value="0"/>
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>
@@ -56,13 +56,12 @@ require_once 'Kernel/SearchResult.php';
         '8983',
         '/solr');
 
-$query=urlencode($_GET['filter'].$_GET['searchTerm']);
-
+$query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
-$endResp=$startResp+$numRows-1;
+
 $options = array(
-  'fl' => '*,score',
+   'fl'=> '*,score',
    'hl'=> 'on',
    'hl.maxAnalyzedChars'=>-1,
    'hl.snippets'=>3,
@@ -71,12 +70,14 @@ $options = array(
 );
 
 $response = $solr->search($query, $startResp, $numRows,$options);
+
 $numResponses=$response->response->numFound;
+$endResp=min($startResp+$numRows,$numResponses);
 if($numResponses==0){
     echo "No responses found";
 }else{
 
-    echo "<div> Showing responses ".$startResp."-".$endResp." of ".$numResponses."</div>";
+    echo "<div> Showing responses ".($startResp+1)."-".$endResp." of ".$numResponses."</div>";
 
     $responses = array();
     $highlights= array();
