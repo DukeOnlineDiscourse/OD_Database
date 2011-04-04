@@ -34,13 +34,28 @@ function printer($arr){
        echo"<pre>";
        print_r($arr);
        echo"</pre>";
-   }
+}
 
-    require_once 'SolrPhpClient/Apache/Solr/Service.php';
-    require_once 'Kernel/solrConn.php';
-    require_once 'Kernel/SearchResult.php';
+function getHighlightedSnippets($response){
+    $highlights =array();
+    foreach(get_object_vars($response->highlighting) as $id=>$resp){
+           //echo"ID: ";
+        $hlFields=get_object_vars($resp);
+        $filledInFields=array();
 
+        foreach($hlFields as $hlField){
+            $filledInFields[]=$hlField;
+        }
 
+        $highlights[$id]=$filledInFields;
+    }
+
+    return $highlights;
+}
+
+require_once 'SolrPhpClient/Apache/Solr/Service.php';
+require_once 'Kernel/solrConn.php';
+require_once 'Kernel/SearchResult.php';
 
 if(!$solr->ping())
 {
@@ -78,17 +93,9 @@ if($numResponses==0){
     $responses = array();
 
     $highlights= array();
-    foreach(get_object_vars($response->highlighting) as $id=>$resp){
-           //echo"ID: ";
-        $hlFields=get_object_vars($resp);
-        $filledInFields=array();
 
-        foreach($hlFields as $hlField){
-            $filledInFields[]=$hlField;
-        }
-
-        $highlights[$id]=$filledInFields;
-    }
+    $highlights = getHighlightedSnippets($response);
+    
 
 
     foreach ($response->response->docs as $docNum =>$doc){
@@ -102,11 +109,6 @@ if($numResponses==0){
         $resp = new SearchResult($snippets,$author['value'],$body['value'],$title['value'],$name['value'],$id['value']);
         $responses[]=$resp;
     }
-
-
-
-
-
 
     foreach($responses as $resp){
        echo$resp->format();
