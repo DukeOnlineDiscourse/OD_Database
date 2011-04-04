@@ -2,7 +2,7 @@
 
 ?>
 
-        <form method="post" action="genSearch" id="homeSearch">
+        <form method="get" action="genSearch" id="homeSearch">
             <h2>Search the Online Discourse Database</h2>
             <input type="text" name="searchTerm" id="searchBox""/>
             <!--    <select name="filter">

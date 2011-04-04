@@ -24,7 +24,7 @@ function printer($arr){
             '8983',
             '/solr');
      
-$query=urlencode($POST['filter'].$_POST['searchTerm']);
+$query=urlencode($_GET['filter'].$_GET['searchTerm']);
 
 $start = 0;
 $rows = 300;
