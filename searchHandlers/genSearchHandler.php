@@ -4,7 +4,7 @@
 
 
 
-   function printer($arr){
+function printer($arr){
        echo"<pre>";
        print_r($arr);
        echo"</pre>";
@@ -24,20 +24,32 @@
             '8983',
             '/solr');
      
-$query=$_POST['filter'].$_POST['searchTerm'];
+$query=urlencode($POST['filter'].$_POST['searchTerm']);
 
 $start = 0;
 $rows = 300;
 $options = array(
   'fl' => '*,score',
-); 
+   'hl'=> 'on',
+   'hl.maxAnalyzedChars'=>-1,
+   'hl.snippets'=>5,
+   'hl.mergeContiguous'=>'true',
+   'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title'
+);
+
 if(!$solr->ping())
     {
        echo "server not responding";
     }
-$response = $solr->search($query, 0, 10,$options);
+$response = $solr->search($query, 0, 4,$options);
 
 $responses = array();
+
+$highlights= array();
+foreach(get_object_vars($response->highlighting) as $id=>$resp){
+       //echo"ID: ";
+       $highlights[$id]=array('body'=>$resp->body);
+}
 
 
 foreach ($response->response->docs as $docNum =>$doc){
@@ -47,17 +59,22 @@ foreach ($response->response->docs as $docNum =>$doc){
     $title=$doc->getField('sup_title');
     $id=$doc->getField('id');
     $name=$doc->getField('attr_stream_name');
-
-    $resp = new SearchResult($author['value'],$body['value'],$title['value'],$name['value'],$id['value']);
+    $snippets=$highlights[$id['value']];
+    $resp = new SearchResult($snippets,$author['value'],$body['value'],$title['value'],$name['value'],$id['value']);
     $responses[]=$resp;
 }
 
+
+
+
 foreach($responses as $resp){
-    //printer($resp);
-    if(strcmp(preg_replace('/\s\s+/', '', $resp->body),"")==0)
-            echo $resp->id."<br>";
+   echo$resp->format();
+ /*   if(strcmp(preg_replace('/\s\s+/', '', $resp->body),"")==0)
+            echo "<br/> body empty: ".$resp->id."<br>";
+*/
+   //printer($highlights[$resp->id]);
 }
 
-//printer($response->response->docs);
+
 
 ?>

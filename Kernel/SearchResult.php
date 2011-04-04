@@ -12,7 +12,7 @@
 class SearchResult {
 
 
-    	public function __construct($author="n/a",$body="n/a",$title="n/a",$name="n/a",$id=0){
+    	public function __construct(&$snippets,$author="n/a",$body="n/a",$title="n/a",$name="n/a",$id=0){
             $na="N/A";
             if($author=="")
                 $author=$na;
@@ -25,6 +25,7 @@ class SearchResult {
             $this->title=$title;
             $this->name=$name;
             $this->id=$id;
+            $this->snippets=$snippets;
 
             $this->con = mysql_connect('localhost:8888', 'root', 'root');
             if (!$this->con)
@@ -40,12 +41,23 @@ class SearchResult {
 			$result = mysql_fetch_array(mysql_query($query));
             $url=$result['url'];
           //  echo $url;
-          return "
+          $firstHalf= "
               <div id='searchResult'>
                <a href='".$url."'.>
                    <h2>".$this->title." by ".$this->author."</h2>
-               </a>
-               </div>";
+               </a>";
+
+           $secondHalf;
+
+           foreach($this->snippets as $section=>$snip){
+              foreach($snip as $num=>$text){
+                  $secondHalf.="<p>".$text."</p>";
+              }
+           }
+               
+           $secondHalf.="</div>";
+
+           return $firstHalf.$secondHalf;
         }
 }
 ?>
