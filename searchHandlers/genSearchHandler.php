@@ -80,7 +80,14 @@ if($numResponses==0){
     $highlights= array();
     foreach(get_object_vars($response->highlighting) as $id=>$resp){
            //echo"ID: ";
-           $highlights[$id]=array('body'=>$resp->body);
+        $hlFields=get_object_vars($resp);
+        $filledInFields=array();
+
+        foreach($hlFields as $hlField){
+            $filledInFields[]=$hlField;
+        }
+
+        $highlights[$id]=$filledInFields;
     }
 
 
