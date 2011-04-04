@@ -11,15 +11,8 @@ function validateForm(){
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
         <label for="searchTerm"><h1>Online Discourse</h1></label><input type="text" name="searchTerm" id="searchBox"/>
-        <!--    <select name="filter">
-                <option value="">All</option>
-                <option value="title:">Title</option>
-                <option value="body:">Body</option>
-                <option value="author:">Author</option>
-            </select>-->
-       <!-- Author: <input type="checkbox" name="author" value="true" checked/>
-        Title: <input type="checkbox" name="title" value="true" checked/>
-        Body: <input type="checkbox" name="body" value="true" checked/>-->
+        <input type="hidden" name="startResp" value="1"/>
+        <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>
 </div>
@@ -57,10 +50,6 @@ require_once 'SolrPhpClient/Apache/Solr/Service.php';
 require_once 'Kernel/solrConn.php';
 require_once 'Kernel/SearchResult.php';
 
-if(!$solr->ping())
-{
-   echo "server not responding";
-}
 
  $solr = new Apache_Solr_Service(
         'localhost',
@@ -69,8 +58,9 @@ if(!$solr->ping())
 
 $query=urlencode($_GET['filter'].$_GET['searchTerm']);
 
-$start = 0;
-$rows = 5;
+$startResp = $_GET['startResp'];
+$numRows = $_GET['numRows'];
+$endResp=$startResp+$numRows-1;
 $options = array(
   'fl' => '*,score',
    'hl'=> 'on',
@@ -80,16 +70,14 @@ $options = array(
    'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title'
 );
 
-if(!$solr->ping())
-    {
-       echo "server not responding";
-    }
-$response = $solr->search($query, 0, $rows,$options);
+$response = $solr->search($query, $startResp, $numRows,$options);
 $numResponses=$response->response->numFound;
 if($numResponses==0){
     echo "No responses found";
 }else{
-    
+
+    echo "<div> Showing responses ".$startResp."-".$endResp." of ".$numResponses."</div>";
+
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);

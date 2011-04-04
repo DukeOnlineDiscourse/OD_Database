@@ -47,7 +47,7 @@ class SearchResult {
 
            foreach($this->snippets as $section=>$snip){
               foreach($snip as $num=>$text){
-                  $secondHalf.="<span class=\"snippet\">".trim($text, "\[^A-Za-z0-9:]\*")."</span><span class='snipSep'> ... </span>";
+                  $secondHalf.="<span class=\"snippet\" id=\"".$this->id."\">".trim($text, "\[^A-Za-z0-9:]\*")."</span><span class='snipSep'> ... </span>";
               }
            }
                
