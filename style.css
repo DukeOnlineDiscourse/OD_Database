@@ -30,6 +30,7 @@ body{
     border-bottom-style:solid;
     border-bottom-color:black;
     border-bottom-width:4px;
+    margin-bottom:5px;
 }
 #homeSearch{
     width:500px;
