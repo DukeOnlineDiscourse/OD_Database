@@ -91,15 +91,11 @@ if($numResponses==0){
 }else{
     
     $responses = array();
-
     $highlights= array();
-
     $highlights = getHighlightedSnippets($response);
     
-
-
+//Create a SearchResult Object out of each response
     foreach ($response->response->docs as $docNum =>$doc){
-
         $author=$doc->getField('authors');
         $body=$doc->getField('body');
         $title=$doc->getField('sup_title');
@@ -110,6 +106,7 @@ if($numResponses==0){
         $responses[]=$resp;
     }
 
+//print out the responses
     foreach($responses as $resp){
        echo$resp->format();
      /*   if(strcmp(preg_replace('/\s\s+/', '', $resp->body),"")==0)

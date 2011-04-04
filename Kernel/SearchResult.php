@@ -12,7 +12,7 @@
 class SearchResult {
 
 
-    	public function __construct(&$snippets,$author="n/a",$body="n/a",$title="n/a",$name="n/a",$id=0){
+    	public function __construct(&$snippets,$author="n/a",$body="n/a",$title="n/a",$url="n/a",$id=0){
             $na="N/A";
             if($author=="")
                 $author=$na;
@@ -23,7 +23,7 @@ class SearchResult {
             $this->author=$author;
             $this->body=$body;
             $this->title=$title;
-            $this->name=$name;
+            $this->url=$url;
             $this->id=$id;
             $this->snippets=$snippets;
 
@@ -36,14 +36,9 @@ class SearchResult {
         }
 
         public function format(){
-            $query = "Select * FROM Files WHERE id='".$this->name."'";
-          //  echo $query;
-			$result = mysql_fetch_array(mysql_query($query));
-            $url=$result['url'];
-          //  echo $url;
           $firstHalf= "
               <div id='searchResult'>
-                <a href='".$url."'.>
+                <a href='".$this->url."'.>
                    <span class='searchHeader'>".$this->title." by ".$this->author."</span>
                 </a>
               <div id='snippets'>";
