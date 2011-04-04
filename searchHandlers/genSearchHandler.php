@@ -1,3 +1,29 @@
+<script>
+function validateForm(){
+    if($('#searchBox').val()==""){
+        alert("No empty queries");
+        return false
+    }
+    return true
+}
+</script>
+
+<div id="header">
+    <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
+        <label for="searchTerm"><h1>Online Discourse</h1></label><input type="text" name="searchTerm" id="searchBox"/>
+        <!--    <select name="filter">
+                <option value="">All</option>
+                <option value="title:">Title</option>
+                <option value="body:">Body</option>
+                <option value="author:">Author</option>
+            </select>-->
+       <!-- Author: <input type="checkbox" name="author" value="true" checked/>
+        Title: <input type="checkbox" name="title" value="true" checked/>
+        Body: <input type="checkbox" name="body" value="true" checked/>-->
+        <input type="submit" name="Search" value="Search" id="searchButton"/>
+</form>
+</div>
+
 <?php
 
 
@@ -14,16 +40,18 @@ function printer($arr){
     require_once 'Kernel/solrConn.php';
     require_once 'Kernel/SearchResult.php';
 
-    if(!$solr->ping())
-    {
-       echo "server not responding";
-    }
 
-     $solr = new Apache_Solr_Service(
-            'localhost',
-            '8983',
-            '/solr');
-     
+
+if(!$solr->ping())
+{
+   echo "server not responding";
+}
+
+ $solr = new Apache_Solr_Service(
+        'localhost',
+        '8983',
+        '/solr');
+
 $query=urlencode($_GET['filter'].$_GET['searchTerm']);
 
 $start = 0;
@@ -71,12 +99,13 @@ if($numResponses==0){
 
 
 
+
+
     foreach($responses as $resp){
        echo$resp->format();
      /*   if(strcmp(preg_replace('/\s\s+/', '', $resp->body),"")==0)
                 echo "<br/> body empty: ".$resp->id."<br>";
     */
-       //printer($highlights[$resp->id]);
     }
 }
 

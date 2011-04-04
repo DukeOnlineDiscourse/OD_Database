@@ -15,7 +15,6 @@ body{
 }
 
 #content{
-    position: fixed;
     top: 50px;
     left: 0;
     right: 0;
@@ -23,8 +22,15 @@ body{
     overflow: auto;
     margin-left: 10px;
     margin-right: 10px;
+    text-align:left;
 }
 
+#header{
+    text-align:left;
+    border-bottom-style:solid;
+    border-bottom-color:black;
+    border-bottom-width:4px;
+}
 #homeSearch{
     width:500px;
     margin:auto;
@@ -44,4 +50,26 @@ a{
     margin-top:10px;
     padding-top:10px;
     width:60px;
+}
+
+label{
+    padding-right:5px;
+}
+
+#header form label h1{
+    display:inline;
+}
+
+#snippets{
+    margin-top:0px;
+    padding-top:0px;
+    margin-left:20px;
+}
+.snippet{
+    margin-top:0px;
+    padding-top:0px;
+}
+
+#searchResult{
+    margin-bottom:20px;
 }

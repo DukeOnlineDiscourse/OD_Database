@@ -43,19 +43,20 @@ class SearchResult {
           //  echo $url;
           $firstHalf= "
               <div id='searchResult'>
-               <a href='".$url."'.>
-                   <h2>".$this->title." by ".$this->author."</h2>
-               </a>";
+                <a href='".$url."'.>
+                   <span class='searchHeader'>".$this->title." by ".$this->author."</span>
+                </a>
+              <div id='snippets'>";
 
            $secondHalf;
 
            foreach($this->snippets as $section=>$snip){
               foreach($snip as $num=>$text){
-                  $secondHalf.="<p>".$text."</p>";
+                  $secondHalf.="<span class=\"snippet\">".$text."</span> ...";
               }
            }
                
-           $secondHalf.="</div>";
+           $secondHalf.="</div></div>";
 
            return $firstHalf.$secondHalf;
         }
