@@ -1,26 +1,19 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-
-
-
 <?php
 
-    $pages = array('genSearch'=>'searchHandlers/genSearchHandler.php');
+    $pages = array('genSearch'=>'searchHandlers/genSearchHandler.php',''=>'pages/home.php','home'=>'pages/home.php');
 
-	$curPage = 'home';
-	if(isset($_GET['page']) && array_key_exists($_GET['page'],$pages))
+	/*$curPage = 'home';*/
+	if(isset($_GET['page']))
 		$curPage = $_GET['page'];
 
-	$mainContentFile = 'pages/home.php';
+	$mainContentFile = '';
 	if(array_key_exists($curPage,$pages)) {
 		$mainContentFile = $pages[$curPage];
-	}
-
-
-   
+	}else{
+        header('Location: home');
+    } 
 ?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
@@ -30,7 +23,8 @@ and open the template in the editor.
     </head>
     <body>
         <div id="content">
-            <? include $mainContentFile; ?>
+            <? 
+            include $mainContentFile; ?>
         </div>
     </body>
 </html>
