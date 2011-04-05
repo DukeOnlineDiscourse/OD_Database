@@ -11,7 +11,7 @@ function validateForm(){
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
         <label for="searchTerm"><h1>Online Discourse</h1></label><input type="text" name="searchTerm" id="searchBox"/>
-        <input type="hidden" name="startResp" value="0"/>
+        <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>
@@ -46,6 +46,43 @@ function getHighlightedSnippets($response){
     return $highlights;
 }
 
+function createPageLinks($startResp,$numRows,$numResponses){
+    $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
+                    === FALSE ? 'http' : 'https'; //http://www.phpf1.com/tutorial/get-current-page-url.html
+    $curURL= $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    //searchTerm=id%3A69&filter=&startResp=0&numRows=5&Search=Search
+
+    $totalPages=ceil($numResponses/$numRows);
+    $curPage = ceil($startResp/$numRows);
+
+    $maxPagesToLinkBefore=3;
+    $maxPagesToLinkAfter=4;
+    $curPageLinks="";
+
+for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAfter);$pageNum++){
+    if($pageNum<=0){
+        continue;
+    }else if($pageNum>$totalPages){
+        break;
+    }
+
+    if($pageNum==$curPage){
+        $class='curPage';
+    }else{
+        $class="";
+    }
+        $patterns=array();
+        $replacements=array();
+
+        $patterns[]="/startResp\=".$startResp."/";
+        $startResp=($pageNum-1)*($numRows)+1;
+        $replacements[]="startResp=".$startResp;
+        $curURL= preg_replace($patterns, $replacements, $curURL);
+        $curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
+    }
+    return $curPageLinks;
+}
+
 require_once 'SolrPhpClient/Apache/Solr/Service.php';
 require_once 'Kernel/solrConn.php';
 require_once 'Kernel/SearchResult.php';
@@ -69,16 +106,17 @@ $options = array(
    'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title'
 );
 
-$response = $solr->search($query, $startResp, $numRows,$options);
-
+$response = $solr->search($query, $startResp-1, $numRows,$options);
 $numResponses=$response->response->numFound;
-$endResp=min($startResp+$numRows,$numResponses);
+$endResp=min($startResp-1+$numRows,$numResponses);
 if($numResponses==0){
     echo "No responses found";
 }else{
+    echo "<div> Showing responses ".($startResp)."-".$endResp." of ".$numResponses."   ".
+   createPageLinks($startResp,$numRows,$numResponses).
+    "</div>";
 
-    echo "<div> Showing responses ".($startResp+1)."-".$endResp." of ".$numResponses."</div>";
-
+   
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);

@@ -79,3 +79,12 @@ label{
     font-style: italic;
     font-weight:bold;
 }
+
+.curPage{
+    text-decoration: none;
+    color:black;
+}
+
+a{
+    text-decoration: none;
+}
