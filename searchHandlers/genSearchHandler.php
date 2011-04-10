@@ -42,14 +42,17 @@ function getHighlightedSnippets($response){
 
         $highlights[$id]=$filledInFields;
     }
-
     return $highlights;
 }
 
-function createPageLinks($startResp,$numRows,$numResponses){
-    $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
+function getCurURL(){
+        $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
                     === FALSE ? 'http' : 'https'; //http://www.phpf1.com/tutorial/get-current-page-url.html
-    $curURL= $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+   return $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+}
+function createPageLinks($startResp,$numRows,$numResponses){
+
+    $curURL= getCurURL();
     //searchTerm=id%3A69&filter=&startResp=0&numRows=5&Search=Search
 
     $totalPages=ceil($numResponses/$numRows);
@@ -83,6 +86,19 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
     return $curPageLinks;
 }
 
+function createFacets($response){
+    $curURL=getCurURL();
+    $facetsDisp=""; 
+    foreach(get_object_vars($response->facet_counts->facet_fields) as $facetName=>$facets){
+       //echo "fName:".$facetName."<br/>";
+       $facetsDisp.= "<h3>".$facetName."</h3>";
+       foreach(get_object_vars($facets) as $facet=>$count){
+           $facetsDisp.="<a href='".$curURL."&fq=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+       }
+    }
+    return $facetsDisp;
+}
+
 require_once 'SolrPhpClient/Apache/Solr/Service.php';
 require_once 'Kernel/solrConn.php';
 require_once 'Kernel/SearchResult.php';
@@ -96,6 +112,7 @@ require_once 'Kernel/SearchResult.php';
 $query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
+$fq=str_replace("\\","",$_GET['fq']);
 
 $options = array(
    'fl'=> '*,score',
@@ -103,20 +120,22 @@ $options = array(
    'hl.maxAnalyzedChars'=>-1,
    'hl.snippets'=>3,
    'hl.mergeContiguous'=>'true',
-   'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title'
+   'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title',
+   'facet'=>'true',
+   'facet.field'=>'authorFacet',
+    'fq'=>$fq
 );
-
 $response = $solr->search($query, $startResp-1, $numRows,$options);
 $numResponses=$response->response->numFound;
 $endResp=min($startResp-1+$numRows,$numResponses);
 if($numResponses==0){
     echo "No responses found";
 }else{
-    echo "<div> Showing responses ".($startResp)."-".$endResp." of ".$numResponses."   ".
+    echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses."   ".
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";
 
-   
+   //echo createFacets($response);
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);
@@ -135,10 +154,7 @@ if($numResponses==0){
 
 //print out the responses
     foreach($responses as $resp){
-       echo$resp->format();
-     /*   if(strcmp(preg_replace('/\s\s+/', '', $resp->body),"")==0)
-                echo "<br/> body empty: ".$resp->id."<br>";
-    */
+       echo $resp->format();
     }
 }
 
