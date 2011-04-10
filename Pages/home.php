@@ -10,6 +10,11 @@ function validateForm(){
     }
     return true
 }
+
+function viewAll(){
+    $('#searchBox').val("*:*");
+    $('#homeSearch').submit();
+}
 </script>
 
 <form method="get" action="genSearch" id="homeSearch" onsubmit="return validateForm()">
@@ -23,5 +28,10 @@ function validateForm(){
         </select>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
+        <input type=button value="View All Documents" onClick="viewAll()"/>
     <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>
+
+<div id="viewAll">
+    <a href="">View All Documents</a>
+</div>

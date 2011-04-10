@@ -33,22 +33,25 @@ while($row = mysql_fetch_assoc($result)) {
     $title =urlencode($row['title']);
     $authors=$row['authors'];
     //need to split authors
-   
+       $id = $row['id'];
+
     $year = $row['year'];
     $authors=split("#",$authors);
     $authFin = array();
     foreach($authors as $author){
         $author=split(',',$author);
         if (count($author)>1){
-            $authFin[]=$author[1]." ".$author[0];
+            $authFin[]=trim($author[1])." ".trim(($author[0]));
         }else
-            $authFin[]=$author[0];
+            $authFin[]=trim($author[0]);
     }
-    $id = $row['id'];
 
     $url="http://localhost:8983/solr/update/extract?";
     $params="uprefix=attr_&literal.id=".$id."&literal.sup_title=".$title."&wt=json";
     foreach($authFin as $author){
+        echo $id."auth:".$author."END<br>";
+        if($author=="")
+            $author="N/A";
         $params.="&literal.authors=".urlencode($author);
     }
     $params.="&stream.url=".$source;
