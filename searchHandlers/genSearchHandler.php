@@ -87,7 +87,7 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
     return $curPageLinks;
 }
 
-function createFacets($response){
+function createFacets($response,$numFacets){
     $curURL=getCurURL();
     $facetsDisp="<div id='facets'>";
     $hiddenContent="<div id='hiddenFacets' style='display:none'>";
@@ -99,11 +99,11 @@ function createFacets($response){
        foreach(get_object_vars($facets) as $facet=>$count){
            if($count!=0){
                if ($numDisp<5){
-                   $facetsDisp.="<a href='".$curURL."&fq=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+                   $facetsDisp.="<a href='".$curURL."&fq[".(++$numFacets)."]=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
                    $numDisp++;
-                   $hiddenContent.="<a href='".$curURL."&fq=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+                   $hiddenContent.="<a href='".$curURL."&fq[".($numFacets)."]=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
                }else {
-                     $hiddenContent.="<a href='".$curURL."&fq=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+                     $hiddenContent.="<a href='".$curURL."&fq[".(++$numFacets)."]=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
               }
            }
 
@@ -129,8 +129,10 @@ require_once 'Kernel/SearchResult.php';
 $query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
-$fq=str_replace("\\","",$_GET['fq'][0]);
-printer ($fq);
+$fq=str_replace("\\","",$_GET['fq']);
+printer($fq);
+$numFacets=sizeof($fq);
+echo $numFacets;
 $options = array(
    'fl'=> '*,score',
    'hl'=> 'on',
@@ -153,7 +155,7 @@ if($numResponses==0){
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";
 
-   echo createFacets($response);
+   echo createFacets($response,$numFacets);
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);
