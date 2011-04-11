@@ -20,7 +20,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Online Discourse Search Engine</title>
         <link rel="stylesheet" href="style.css" type="text/css" />
+        <link rel="stylesheet" href="thickbox.css" type="text/css" />
         <script type="text/javascript"src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script type="text/javascript"src="thickbox-compressed.js"></script>
+
     </head>
     <body> 
         <div id="content">

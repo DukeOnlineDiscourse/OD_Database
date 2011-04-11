@@ -3,6 +3,7 @@
 html, body{
 	margin:0px;
 	padding:0px;
+    height:100%;
 }
 body{
 	height:100%;
@@ -23,6 +24,7 @@ body{
     margin-left: 10px;
     margin-right: 10px;
     text-align:left;
+   
 }
 
 #header{
@@ -87,4 +89,16 @@ label{
 
 a{
     text-decoration: none;
+}
+
+#facets{
+    float:left;
+    width:250px;
+    border-right: black solid 1px;
+    margin-right:10px;
+    height:100%;
+}
+
+.facetGroup{
+    margin-top:5px;
 }
