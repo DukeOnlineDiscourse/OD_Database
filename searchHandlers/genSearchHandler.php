@@ -19,10 +19,6 @@ function validateForm(){
 
 <?php
 
-
-
-
-
 function printer($arr){
        echo"<pre>";
        print_r($arr);
@@ -48,7 +44,7 @@ function getHighlightedSnippets($response){
 function getCurURL(){
         $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
                     === FALSE ? 'http' : 'https'; //http://www.phpf1.com/tutorial/get-current-page-url.html
-   return $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+   return str_replace("facetChange=1","",$protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 }
 
 function createPageLinks($startResp,$numRows,$numResponses){
@@ -78,9 +74,11 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
         $patterns=array();
         $replacements=array();
 
-        $patterns[]="/startResp\=".$startResp."/";
+        $patterns[]="/startResp\=(\d+)/";
         $startResp=($pageNum-1)*($numRows)+1;
+    //    echo "<br> Start Resp page".$startResp;
         $replacements[]="startResp=".$startResp;
+    //    echo "<br>".$curURL;
         $curURL= preg_replace($patterns, $replacements, $curURL);
         $curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
     }
@@ -90,7 +88,7 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
 function createFacets($response,$fq){
     $curURL=getCurURL();
     $numFacets=sizeof($fq);
-
+    
     $chosenFacets=array();
     foreach ($fq as $existFacet){
         $existFacet=explode(":",$existFacet);
@@ -107,11 +105,11 @@ function createFacets($response,$fq){
            if(!in_array("\"".$facet."\"",$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<a href='".$curURL."&fq[".(++$numFacets)."]=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+                       $facetsDisp.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
                        $numDisp++;
-                       $hiddenContent.="<a href='".$curURL."&fq[".($numFacets)."]=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+                       $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
                    }else {
-                         $hiddenContent.="<a href='".$curURL."&fq[".(++$numFacets)."]=".$facetName.":\"".$facet."\"'/>".$facet." ".$count."</a><br/>";
+                         $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
                   }
                }
            }
@@ -153,6 +151,9 @@ $options = array(
     'fq'=>$fq
 );
 
+if($_GET['facetChange']==1){
+    $startResp=1;
+}
 $response = $solr->search($query, $startResp-1, $numRows,$options);
 $numResponses=$response->response->numFound;
 $endResp=min($startResp-1+$numRows,$numResponses);
@@ -167,7 +168,6 @@ if($numResponses==0){
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);
-    printer($response->responseHeader);
 //Create a SearchResult Object out of each response
     foreach ($response->response->docs as $docNum =>$doc){
         $author=$doc->getField('authors');
