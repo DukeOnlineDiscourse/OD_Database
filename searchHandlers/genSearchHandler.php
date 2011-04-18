@@ -50,7 +50,6 @@ function getCurURL(){
 function createPageLinks($startResp,$numRows,$numResponses){
 
     $curURL= getCurURL();
-    //searchTerm=id%3A69&filter=&startResp=0&numRows=5&Search=Search
 
     $totalPages=ceil($numResponses/$numRows);
     $curPage = ceil($startResp/$numRows);
@@ -119,8 +118,30 @@ function createFacets($response,$fq){
        $hiddenContent.="</div>";
     }
      $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hiddenFacets\" class=\"thickbox\">
-    Show all facets</a></div>";
-    return $facetsDisp.$hiddenContent."</div>";
+    Show all facets</a>";
+     $facetsDisp.=createClusters($response);
+    return $facetsDisp.$hiddenContent."</div></div>";
+}
+
+function createClusters($response){
+    $clustersDisp="";
+           $clustersDisp.= "<div class='facetGroup'>Clusters<br/>";
+
+        foreach($response->clusters as $clusterNum=>$cluster){
+           $numDisp=0;
+           $clusterName=$cluster->labels[0];
+           $count=sizeof($cluster->docs);
+          // $clustersDisp.= "<div class='facetGroup'>".$clusterName."<br/>";
+          // $hiddenContent.="<div class='facetGroup'>".$facetName."<br/>";
+           if($count!=0){
+                   $clustersDisp.="<a class='facet' href='"."&fq[]=".":\""."\"&facetChange=1'/>".$clusterName." (".$count.")</a><br/>";
+                   $numDisp++;
+                  // $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";}
+            }
+     //  $clustersDisp.="</div>";
+    //   $hiddenContent.="</div>";
+    }
+    return $clustersDisp."</div>";
 }
 
 require_once 'SolrPhpClient/Apache/Solr/Service.php';
@@ -149,19 +170,21 @@ $options = array(
    'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title',
    'facet'=>'true',
    'facet.field'=>'authorFacet',
-    'fq'=>$fq
+    'fq'=>$fq,
+    'qt'=>'/clustering'
 );
 
 if($_GET['facetChange']==1){
     $startResp=1;
 }
 $response = $solr->search($query, $startResp-1, 10000,$options);
+
 $numResponses=$response->response->numFound;
 $endResp=min($startResp-1+$numRows,$numResponses);
+
 if($numResponses==0){
     echo "No responses found";
 }else{
-    
 
    echo createFacets($response,$fq);
     $responses = array();
