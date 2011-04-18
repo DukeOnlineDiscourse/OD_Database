@@ -26,8 +26,6 @@ function viewAll(){
             <option value="body:">Body</option>
             <option value="author:">Author</option>
         </select>
-        <input type="hidden" name="startResp" value="1"/>
-        <input type="hidden" name="numRows" value="5"/>
         <input type=button value="View All Documents" onClick="viewAll()"/>
     <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>

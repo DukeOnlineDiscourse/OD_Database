@@ -23,6 +23,25 @@
         <link rel="stylesheet" href="thickbox.css" type="text/css" />
         <script type="text/javascript"src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
         <script type="text/javascript"src="thickbox-compressed.js"></script>
+        <script>
+        $(document).ready(function()
+        {
+            $('.pageLink').click( function(){
+              $('#responses').children().remove();
+             var startResp=window.location.hash.substring(1,2);
+                for(var i =0;i<5;i++){
+                    $('#responses').append(jsResponses[startResp+i]);
+                }
+            }
+            );
+          /*  function nextPage(startResp){
+                alert(startResp);
+                alert(jsResponses);
+                alert("done");
+                return false;
+            }*/
+        });
+</script>
 
     </head>
     <body> 

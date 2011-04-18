@@ -59,8 +59,9 @@ label{
     padding-right:5px;
 }
 
-#header form label h1{
+#header form a h1{
     display:inline;
+    color:black;
 }
 
 #snippets{
@@ -83,8 +84,7 @@ label{
 }
 
 .curPage{
-    text-decoration: none;
-    color:black;
+    display:inline;
 }
 
 a{

@@ -10,7 +10,7 @@ function validateForm(){
 
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
-        <label for="searchTerm"><h1>Online Discourse</h1></label><input type="text" name="searchTerm" id="searchBox"/>
+        <a href="home"><h1>Online Discourse</h1></a><label for="searchTerm"></label><input type="text" name="searchTerm" id="searchBox"/>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
@@ -59,29 +59,30 @@ function createPageLinks($startResp,$numRows,$numResponses){
     $maxPagesToLinkAfter=4;
     $curPageLinks="";
 
-for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAfter);$pageNum++){
-    if($pageNum<=0){
-        continue;
-    }else if($pageNum>$totalPages){
-        break;
+    for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAfter);$pageNum++){
+        if($pageNum<=0){
+            continue;
+        }else if($pageNum>$totalPages){
+            break;
+        }
+
+        if($pageNum==$curPage){
+            $class='curPage';
+             $curPageLinks.="<p class='".$class."'>".$pageNum." </p> ";
+
+        }else{
+            $class="";
+            $patterns=array();
+            $replacements=array();
+
+            $patterns[]="/startResp\=(\d+)/";
+            $startResp=($pageNum-1)*($numRows)+1;
+            $replacements[]="startResp=".$startResp;
+            $curURL= preg_replace($patterns, $replacements, $curURL);
+            $curPageLinks.="<a href='#".$startResp."' class='pageLink' id='".$startResp."'>".$pageNum." </a> ";
+        }
     }
 
-    if($pageNum==$curPage){
-        $class='curPage';
-    }else{
-        $class="";
-    }
-        $patterns=array();
-        $replacements=array();
-
-        $patterns[]="/startResp\=(\d+)/";
-        $startResp=($pageNum-1)*($numRows)+1;
-    //    echo "<br> Start Resp page".$startResp;
-        $replacements[]="startResp=".$startResp;
-    //    echo "<br>".$curURL;
-        $curURL= preg_replace($patterns, $replacements, $curURL);
-        $curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
-    }
     return $curPageLinks;
 }
 
@@ -105,11 +106,11 @@ function createFacets($response,$fq){
            if(!in_array("\"".$facet."\"",$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
+                       $facetsDisp.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                        $numDisp++;
-                       $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
+                       $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                    }else {
-                         $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
+                         $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                   }
                }
            }
@@ -118,7 +119,7 @@ function createFacets($response,$fq){
        $hiddenContent.="</div>";
     }
      $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hiddenFacets\" class=\"thickbox\">
-    Show all facets .</a></div>";
+    Show all facets</a></div>";
     return $facetsDisp.$hiddenContent."</div>";
 }
 
@@ -133,8 +134,8 @@ require_once 'Kernel/SearchResult.php';
         '/solr');
 
 $query=$_GET['filter'].$_GET['searchTerm'];
-$startResp = $_GET['startResp'];
-$numRows = $_GET['numRows'];
+$startResp = 1;
+$numRows = 5;
 if(isset($_GET['fq']))
     $fq=str_replace("\\","",$_GET['fq']);
 else $fq=array();
@@ -154,15 +155,13 @@ $options = array(
 if($_GET['facetChange']==1){
     $startResp=1;
 }
-$response = $solr->search($query, $startResp-1, $numRows,$options);
+$response = $solr->search($query, $startResp-1, 10000,$options);
 $numResponses=$response->response->numFound;
 $endResp=min($startResp-1+$numRows,$numResponses);
 if($numResponses==0){
     echo "No responses found";
 }else{
-    echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses."   ".
-   createPageLinks($startResp,$numRows,$numResponses).
-    "</div>";
+    
 
    echo createFacets($response,$fq);
     $responses = array();
@@ -176,16 +175,30 @@ if($numResponses==0){
         $id=$doc->getField('id');
         $name=$doc->getField('attr_stream_name');
         $snippets=$highlights[$id['value']];
-        $resp = new SearchResult($snippets,$author['value'],$body['value'],$title['value'],$name['value'],$id['value']);
+        $desc=$doc->getField('desc');
+        $resp = new SearchResult($snippets,$desc['value'],$author['value'],$body['value'],$title['value'],$name['value'],$id['value']);
         $responses[]=$resp;
     }
 
 //print out the responses
+    echo "<div id='rightCol'>";
+    echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses."   ".
+   createPageLinks($startResp,$numRows,$numResponses).
+    "</div></div>";
     echo "<div id='responses'>";
-    foreach($responses as $resp){
-       echo $resp->format();
+    for($i=0;$i<$numRows;$i++){
+       echo $responses[$i]->format();
     }
     echo "</div>";
+    echo "<script> var jsResponses = new Array();
+        var x = 10;";
+    for($i=0;$i<$numResponses;$i++){
+        if ($i==66){
+           // break;
+        }
+       echo 'jsResponses['.$i.'] = '.json_encode($responses[$i]->format()).';';
+    }
+    echo "</script>";
 }
 
 
