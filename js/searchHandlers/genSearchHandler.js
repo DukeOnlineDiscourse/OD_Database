@@ -3,7 +3,6 @@ $().ready(
         $.ajax({
             url: 'searchHandlers/getClusterInfo.php',
             success: function(data) {
-                alert('Load was performed.'+data);
                 $('#facets').append(data);
             }
         })
