@@ -1,13 +1,3 @@
-<script>
-function validateForm(){
-    if($('#searchBox').val()==""){
-        alert("No empty queries");
-        return false
-    }
-    return true
-}
-</script>
-
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
         <a href="/ODDemo"><label for="searchTerm"><h1>Online Discourse</h1></label></a><input type="text" name="searchTerm" id="searchBox"/>
@@ -118,7 +108,7 @@ function createFacets($response,$fq){
        $hiddenContent.="</div>";
     }
      $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hiddenFacets\" class=\"thickbox\">
-    Show all facets .</a></div>";
+    Show all facets</a></div>";
     return $facetsDisp.$hiddenContent."</div>";
 }
 

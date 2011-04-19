@@ -1,6 +1,11 @@
 <?php
 
-    $pages = array('genSearch'=>'searchHandlers/genSearchHandler.php',''=>'pages/home.php','home'=>'pages/home.php');
+    $homeArray=array('pages/home.php',array(''),array(''));
+    $pages = array(
+        'genSearch'=>array('searchHandlers/genSearchHandler.php',
+                            array('js/searchHandlers/genSearchHandler.js',"js/searchHandlers/thickbox-compressed.js"),
+                            array("styles/searchHandlers/thickbox.css")),
+        ''=>$homeArray,'home'=>$homeArray);
 
 	/*$curPage = 'home';*/
 	if(isset($_GET['page']))
@@ -8,7 +13,9 @@
 
 	$mainContentFile = '';
 	if(array_key_exists($curPage,$pages)) {
-		$mainContentFile = $pages[$curPage];
+		$mainContentFile = $pages[$curPage][0];
+        $jsFiles = $pages[$curPage][1];
+        $csFiles= $pages[$curPage][2];
 	}else{
         header('Location: home');
     } 
@@ -20,10 +27,19 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Online Discourse Search Engine</title>
         <link rel="stylesheet" href="style.css" type="text/css" />
-        <link rel="stylesheet" href="thickbox.css" type="text/css" />
         <script type="text/javascript"src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-        <script type="text/javascript"src="thickbox-compressed.js"></script>
+        <?
+          foreach ($csFiles as $csFile){
+                if($csFile!="")
+                    echo "<link rel=\"stylesheet\" href=\"".$csFile."\" type=\"text/css\"/>";
+            }
 
+            foreach ($jsFiles as $jsFile){
+                if($jsFile!="")
+                    echo "<script type=\"text/javascript\" src=\"".$jsFile."\"></script>";
+            }
+        ?>
+        
     </head>
     <body> 
         <div id="content">
