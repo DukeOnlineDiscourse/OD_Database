@@ -24,7 +24,7 @@ function createClusters($response){
     
     return $clustersDisp."</div>";
 }
-
+$query=$_GET['searchTerm'];
 /*$query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
@@ -49,7 +49,7 @@ $options = array(
 if($_GET['facetChange']==1){
     $startResp=1;
 }
-$response = $solr->search('freedom', 0, 10000,$options);
+$response = $solr->search($query, 0, 10000,$options);
 $numResponses=$response->response->numFound;
 
 
