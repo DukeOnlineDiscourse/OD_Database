@@ -95,11 +95,11 @@ function createFacets($response,$fq){
            if(!in_array("\"".$facet."\"",$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
+                       $facetsDisp.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                        $numDisp++;
-                       $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
+                       $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                    }else {
-                         $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." ".$count."</a><br/>";
+                         $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                   }
                }
            }
