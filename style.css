@@ -102,3 +102,7 @@ a{
 .facetGroup{
     margin-top:5px;
 }
+h1{
+    color:black;
+    cursor:hand;
+}

@@ -10,7 +10,7 @@ function validateForm(){
 
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
-        <label for="searchTerm"><h1>Online Discourse</h1></label><input type="text" name="searchTerm" id="searchBox"/>
+        <a href="/ODDemo"><label for="searchTerm"><h1>Online Discourse</h1></label></a><input type="text" name="searchTerm" id="searchBox"/>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
