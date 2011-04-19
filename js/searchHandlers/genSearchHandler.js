@@ -1,10 +1,10 @@
 $().ready(
     function getFacets(){
-        alert("gettingFacets");
         $.ajax({
             url: 'searchHandlers/getClusterInfo.php',
             success: function(data) {
                 alert('Load was performed.'+data);
+                $('#facets').append(data);
             }
         })
     }

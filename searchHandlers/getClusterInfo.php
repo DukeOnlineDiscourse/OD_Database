@@ -9,6 +9,22 @@ $solr = new Apache_Solr_Service(
         '8983',
         '/solr');
 
+function createClusters($response){
+    $clustersDisp="";
+    $clustersDisp.= "<div class='facetGroup'>Clusters <br/>";
+
+    foreach($response->clusters as $clusterNum=>$cluster){
+       $numDisp=0;
+       $clusterName=$cluster->labels[0];
+       $count=sizeof($cluster->docs);
+       if($count!=0){
+               $clustersDisp.="<a class='facet' href='foo'>".$clusterName." (".$count.")</a><br/>";
+        }
+    }
+    
+    return $clustersDisp."</div>";
+}
+
 /*$query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
@@ -26,7 +42,8 @@ $options = array(
    'facet'=>'true',
    'facet.field'=>'authorFacet',
     'fq'=>'',
-    'qt'=>'/clustering'
+    'qt'=>'/clustering',
+    'LingoClusteringAlgorithm.desiredClusterCountBase'=>6
 );
 
 if($_GET['facetChange']==1){
@@ -35,6 +52,7 @@ if($_GET['facetChange']==1){
 $response = $solr->search('freedom', 0, 10000,$options);
 $numResponses=$response->response->numFound;
 
-echo json_encode($numResponses);
+
+echo createClusters($response);
 
 ?>
