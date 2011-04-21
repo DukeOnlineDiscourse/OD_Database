@@ -167,9 +167,12 @@ if($numResponses==0){
 
 //print out the responses
     echo "<div id='responses'>";
-    foreach($responses as $resp){
-       echo $resp->format();
-    }
+        for($i=0;$i<sizeof($responses);$i++){
+            if($i!=sizeof($responses)-1)
+                echo $responses[$i]->format();
+            else
+                echo $responses[$i]->format("last");
+        }
     echo "</div>";
 }
 

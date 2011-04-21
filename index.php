@@ -1,10 +1,10 @@
 <?php
 
-    $homeArray=array('pages/home.php',array(''),array(''));
+    $homeArray=array('pages/home.php',array(''),array('styles/home.css'));
     $pages = array(
         'genSearch'=>array('searchHandlers/genSearchHandler.php',
                             array('js/searchHandlers/genSearchHandler.js',"js/searchHandlers/thickbox-compressed.js"),
-                            array("styles/searchHandlers/thickbox.css")),
+                            array("styles/searchHandlers/thickbox.css","styles/searchHandlers/search.css")),
         ''=>$homeArray,'home'=>$homeArray);
 
 	/*$curPage = 'home';*/
@@ -26,7 +26,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Online Discourse Search Engine</title>
-        <link rel="stylesheet" href="style.css" type="text/css" />
         <script type="text/javascript"src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
         <?
           foreach ($csFiles as $csFile){

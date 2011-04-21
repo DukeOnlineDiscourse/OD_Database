@@ -1,0 +1,121 @@
+/*General*/
+    html, body{
+        margin:0px;
+        padding:0px;
+        height:100%;
+    }
+
+    body{
+        height:100%;
+        text-align: center;
+        /* font-family:Futura,"Century Gothic",AppleGothic,sans-serif; */
+        font-family:arial;
+        padding-top:20px;
+    }
+
+    a{
+        color:#3B59A5;
+        font-family:Futura,"Century Gothic",AppleGothic,sans-serif;
+        text-decoration: none;
+    }
+
+/*layout*/
+    #content{
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align:left;
+        width:auto;
+
+    }
+
+    /*facets aka left column*/
+    #facets{
+        float:left;
+        width:250px;
+        height:100%;
+    }
+
+    .facetGroup{
+        margin-top:5px;
+    }
+
+    /*responses aka right column*/
+
+    #responses{
+        margin-left:250px;
+        padding-left:10px;
+        border-left: black solid 1px;
+
+    }
+
+
+
+/*Header*/
+    #header{
+        text-align:left;
+        border-bottom-style:solid;
+        border-bottom-color:black;
+        border-bottom-width:4px;
+        margin-bottom:5px;
+    }
+
+    #searchBox{
+        width:450px;
+        margin:auto;
+    }
+
+    #searchButton{
+        margin-top:10px;
+        padding-top:10px;
+        width:60px;
+    }
+
+
+    label{
+        padding-right:5px;
+    }
+
+    #header form label h1{
+        display:inline;
+        color:black;
+        cursor:hand;
+    }
+
+
+/*search results*/
+    #searchResult{
+        padding-bottom:20px;
+    }
+
+    #searchResult.last{
+        margin-bottom:5px;
+    }
+    
+    /*Snippets*/
+        #snippets{
+            margin-top:0px;
+            padding-top:0px;
+            margin-left:20px;
+        }
+
+        .snippet{
+            margin-top:0px;
+            padding-top:0px;
+        }
+
+        .snipSep{
+            font-style: italic;
+            font-weight:bold;
+        }
+
+/*Page Nums*/
+    .curPage{
+        text-decoration: none;
+        color:black;
+    }
+

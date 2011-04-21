@@ -36,9 +36,9 @@ class SearchResult {
             mysql_select_db("ODDemo", $this->con);
         }
 
-        public function format(){
+        public function format($class=''){
           $firstHalf= "
-              <div id='searchResult'>
+              <div id='searchResult' class='".$class."'>
                 <a href='".$this->url."'.>
                    <span class='searchHeader'>".$this->title." by ".$this->author."</span>
                 </a>
