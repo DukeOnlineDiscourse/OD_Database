@@ -39,7 +39,7 @@ class SearchResult {
         public function format($class=''){
           $firstHalf= "
               <div id='searchResult' class='".$class."'>
-                <a href='".$this->url."'.>
+                <a href='".$this->url."'>
                    <span class='searchHeader'>".$this->title." by ".$this->author."</span>
                 </a>
               <div id='snippets'>";
