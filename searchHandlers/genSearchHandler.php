@@ -129,6 +129,12 @@ if(isset($_GET['fq']))
     $fq=str_replace("\\","",$_GET['fq']);
 else $fq=array();
 
+if(isset($_GET['clust'])){
+    $clust = split($_GET['clust'], ',');
+    for($i=0;$i<sizeof($clust);$i++){
+        $fq[] = "id:".$clust[$i];
+    }
+}
 $options = array(
    'fl'=> '*,score',
    'hl'=> 'on',
