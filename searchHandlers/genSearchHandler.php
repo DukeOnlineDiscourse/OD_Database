@@ -75,14 +75,12 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
     return $curPageLinks;
 }
 
-function createFacets($response,$fq){
+function createFacets($response,$auths){
     $curURL=getCurURL();
     $numFacets=sizeof($fq);
-    
     $chosenFacets=array();
-    foreach ($fq as $existFacet){
-        $existFacet=explode(":",$existFacet);
-        $chosenFacets[]=$existFacet[1];
+    foreach ($auths as $existFacet){
+        $chosenFacets[]=$existFacet;
     }
 
     $facetsDisp="<div id='facets'>";
@@ -92,14 +90,14 @@ function createFacets($response,$fq){
        $facetsDisp.= "<div class='facetGroup'>".$facetName."<br/>";
        $hiddenContent.="<div class='facetGroup'>".$facetName."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
-           if(!in_array("\"".$facet."\"",$chosenFacets)){
+           if(!in_array($facet,$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
+                       $facetsDisp.="<a class='facet' href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                        $numDisp++;
-                       $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
+                       $hiddenContent.="<a class='facet' href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                    }else {
-                         $hiddenContent.="<a class='facet' href='".$curURL."&fq[]=".$facetName.":\"".$facet."\"&facetChange=1'/>".$facet." (".$count.")</a><br/>";
+                         $hiddenContent.="<a class='facet' href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a><br/>";
                   }
                }
            }
@@ -125,9 +123,21 @@ require_once 'Kernel/SearchResult.php';
 $query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
-if(isset($_GET['fq']))
-    $fq=str_replace("\\","",$_GET['fq']);
-else $fq=array();
+
+$auth=array();
+if(isset($_GET['auth'])){
+    $first=true;
+    $auth=$_GET['auth'];
+    $fq='';
+    for($i=0;$i<sizeof($auth);$i++){
+        if(!$first){
+            $fq=$fq." AND "."authorFacet:\"".$auth[$i]."\"";
+        }else{
+            $fq.="authorFacet:\"".$auth[$i]."\"";
+            $first=false;
+        }
+    }
+}
 
 if(isset($_GET['clust'])){
     $clust = split($_GET['clust'], ',');
@@ -160,7 +170,7 @@ if($numResponses==0){
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";
 
-   echo createFacets($response,$fq);
+   echo createFacets($response,$auth);
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);

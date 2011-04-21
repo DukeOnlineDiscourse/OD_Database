@@ -22,8 +22,7 @@ function getCurURL(){
 
 function createClusters($response,$url){
     $clustersDisp="";
-    $clustersDisp.= "<div class='facetGroup'>Clusters <br/>";
-      // echo $_SERVER['QUERY_STRING'];
+    $clustersDisp.= "<div class='facetGroup'>Clusters<br/>";
 
     foreach($response->clusters as $clusterNum=>$cluster){
        $numDisp=0;
@@ -37,17 +36,27 @@ function createClusters($response,$url){
        $docs= substr($docs,0,-1);
 
        if($count!=0){
-               $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$_SERVER['QUERY_STRING']."&clust=".$docs."'>".$clusterName." (".$count.")</a><br/>";
+              $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$_SERVER['QUERY_STRING']."&clust[]=".$docs."'>".$clusterName." (".$count.")</a><br/>";
         }
     }
     
     return $clustersDisp."</div>";
 }
 $query=$_GET['searchTerm'];
-echo $query;
-if(isset($_GET['fq']))
-    $fq=str_replace("\\","",$_GET['fq']);
-else $fq=array();
+
+if(isset($_GET['auth'])){
+    $first=true;
+    $auth=$_GET['auth'];
+    $fq='';
+    for($i=0;$i<sizeof($auth);$i++){
+        if(!$first){
+            $fq=$fq." AND ".$auth[$i];
+        }else{
+            $fq.=$auth[$i];
+            $first=false;
+        }
+    }
+}
 
 $options = array(
    'fl'=> '*,score',
@@ -62,7 +71,6 @@ if($_GET['facetChange']==1){
     $startResp=1;
 }
 $response = $solr->search($query, 0, 10000,$options);
-
 
 echo createClusters($response,'');
 
