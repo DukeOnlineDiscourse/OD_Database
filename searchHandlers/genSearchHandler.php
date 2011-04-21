@@ -139,7 +139,7 @@ $options = array(
    'facet'=>'true',
    'facet.field'=>'authorFacet',
     'fq'=>$fq
-);
+ );
 
 if($_GET['facetChange']==1){
     $startResp=1;
@@ -166,7 +166,8 @@ if($numResponses==0){
         $id=$doc->getField('id');
         $name=$doc->getField('attr_stream_name');
         $snippets=$highlights[$id['value']];
-        $resp = new SearchResult($snippets,$author['value'],$body['value'],$title['value'],$name['value'],$id['value']);
+        $desc=$doc->getField('desc');
+        $resp = new SearchResult($snippets,$author['value'],$body['value'],$title['value'],$name['value'],$desc['value'],$id['value']);
         $responses[]=$resp;
     }
 
