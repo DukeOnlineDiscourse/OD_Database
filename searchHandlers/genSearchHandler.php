@@ -8,12 +8,10 @@
 </div>
 
 <?php
-
-function printer($arr){
-       echo"<pre>";
-       print_r($arr);
-       echo"</pre>";
-}
+require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/searchHandlers/genSearch.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/core.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/solrConn.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/SearchResult.php";
 
 function getHighlightedSnippets($response){
     $highlights =array();
@@ -110,41 +108,21 @@ function createFacets($response,$auths){
     return $facetsDisp.$hiddenContent."</div>";
 }
 
-require_once 'SolrPhpClient/Apache/Solr/Service.php';
-require_once 'Kernel/solrConn.php';
-require_once 'Kernel/SearchResult.php';
-
-
- $solr = new Apache_Solr_Service(
-        'localhost',
-        '8983',
-        '/solr');
 
 $query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
 
 $auth=array();
-if(isset($_GET['auth'])){
-    $first=true;
+if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
-    $fq='';
-    for($i=0;$i<sizeof($auth);$i++){
-        if(!$first){
-            $fq=$fq." AND "."authorFacet:\"".$auth[$i]."\"";
-        }else{
-            $fq.="authorFacet:\"".$auth[$i]."\"";
-            $first=false;
-        }
-    }
+    $fq=decipherAuths($auth);
 }
 
 if(isset($_GET['clust'])){
-    $clust = split($_GET['clust'], ',');
-    for($i=0;$i<sizeof($clust);$i++){
-        $fq[] = "id:".$clust[$i];
-    }
+    $fq=decipherClusts($_GET['clust'],$fq);
 }
+
 $options = array(
    'fl'=> '*,score',
    'hl'=> 'on',
