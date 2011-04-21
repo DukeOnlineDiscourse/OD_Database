@@ -74,6 +74,7 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
 }
 
 function createFacets($response,$auths){
+    $facetDislayNames=array('authorFacet'=>"Authors");
     $curURL=getCurURL();
     $numFacets=sizeof($fq);
     $chosenFacets=array();
@@ -85,8 +86,8 @@ function createFacets($response,$auths){
     $hiddenContent="<div id='hiddenFacets' style='display:none'>";
     foreach(get_object_vars($response->facet_counts->facet_fields) as $facetName=>$facets){
         $numDisp=0;
-       $facetsDisp.= "<div class='facetGroup'>".$facetName."<br/>";
-       $hiddenContent.="<div class='facetGroup'>".$facetName."<br/>";
+       $facetsDisp.= "<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
+       $hiddenContent.="<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
            if(!in_array($facet,$chosenFacets)){
                if($count!=0){

@@ -30,7 +30,7 @@ function getClustNum(){
 
 function createClusters($response,$url){
     $clustersDisp="";
-    $clustersDisp.= "<div class='facetGroup'>Clusters<br/>";
+    $clustersDisp.= "<div class='facetGroup'>Dynamically Created Clusters<br/>";
     $clustNum=getClustNum();
     foreach($response->clusters as $clusterNum=>$cluster){
        $numDisp=0;
@@ -44,7 +44,7 @@ function createClusters($response,$url){
        $docs= substr($docs,0,-1);
 
        if($count!=0){
-              $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$_SERVER['QUERY_STRING']."&".$docs."'>".$clusterName." (".$count.")</a><br/>";
+              $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$_SERVER['QUERY_STRING']."&".$docs."'><p>".$clusterName." (".$count.")</p></a>";
         }
     }
     

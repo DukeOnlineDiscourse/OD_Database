@@ -25,12 +25,11 @@
         left: 0;
         right: 0;
         bottom: 0;
-        overflow: auto;
         margin-left: 10px;
         margin-right: 10px;
         text-align:left;
         width:auto;
-
+        height:100%;
     }
 
     /*facets aka left column*/
@@ -44,13 +43,20 @@
         margin-top:5px;
     }
 
+    .facet{
+       text-indent:-10px;
+    }
+    .facet p{
+        margin-left:10px;
+}
+
     /*responses aka right column*/
 
     #responses{
         margin-left:250px;
         padding-left:10px;
         border-left: black solid 1px;
-
+        height:100%;
     }
 
 
