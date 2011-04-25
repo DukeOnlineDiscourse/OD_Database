@@ -109,19 +109,50 @@ function createFacets($response,$auths){
     return $facetsDisp.$hiddenContent."</div>";
 }
 
+function getBCClust($clusters){
+    $clustNames=array();
+    $count=0;
+    foreach($clusters as $clusterName=>$docs){
+        $numDigits=floor($count/10)+1;
+        $clustNames[]=substr($clusterName,$numDigits);
+        $count++;
+    }
+    return $clustNames;
+}
+
+function createBreadCrumb($bcFac,$bcClust){
+    $bc= "<div id=\"breadCrumb\">";
+
+    foreach($bcFac as $crumb){
+        $bc.="<span class=\"crumb\">".$crumb."</span>";
+    }
+    $bc.="</div><div id=\"breadCrumb\">";
+    foreach($bcClust as $crumb){
+        $bc.="<span class=\"crumb\">".$crumb."</span>";
+    }
+    $bc.="</div>";
+    return $bc;
+}
 
 $query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
 
 $auth=array();
+$breadCrumbFac=array();
 if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
     $fq=decipherAuths($auth);
+    foreach($auth as $author){
+        $breadCrumbFac[]=$author;
+    }
 }
 
+$bcClust=array();
 if(isset($_GET['clust'])){
     $fq=decipherClusts($_GET['clust'],$fq);
+    $bcClust=getBCClust($_GET['clust']);
+
 }
 
 $options = array(
@@ -149,6 +180,7 @@ if($numResponses==0){
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";
 
+   echo createBreadCrumb($breadCrumbFac,$bcClust);
    echo createFacets($response,$auth);
     $responses = array();
     $highlights= array();

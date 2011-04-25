@@ -18,13 +18,14 @@ function getClustNum(){
     $clustNum=-1;
     foreach (split("&",$_SERVER['QUERY_STRING']) as $get){
         if(startsWith($get,'clust[',true)){
-            $num =split(']',substr($get,6));
+            $num =split(']',substr($get,6,1));
             if(intval($num[0])>$clustNum){
                 $clustNum=intval($num[0]);
             }
         }
     }
     $clustNum=$clustNum+1;
+    echo $clustNum;
     return $clustNum;
 }
 
@@ -35,11 +36,10 @@ function createClusters($response,$url){
     foreach($response->clusters as $clusterNum=>$cluster){
        $numDisp=0;
        $clusterName=$cluster->labels[0];
-
        $count=sizeof($cluster->docs);
        $docs="";
        for($i=0;$i<$count;$i++){
-           $docs.="clust[".$clustNum."][]=".$cluster->docs[$i]."&";
+           $docs.="clust[".$clustNum.$cluster->labels[0]."][]=".$cluster->docs[$i]."&";
        }
        $docs= substr($docs,0,-1);
 
