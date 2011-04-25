@@ -36,18 +36,19 @@
     #facets{
         float:left;
         width:250px;
-        height:100%;
+        min-height:100%;
+
     }
 
-    .facetGroup{
-        margin-top:5px;
-    }
+        .facetGroup{
+            margin-top:5px;
+        }
 
-    .facet{
-       text-indent:-10px;
-    }
-    .facet p{
-        margin-left:10px;
+        .facet{
+           text-indent:-10px;
+        }
+        .facet p{
+            margin-left:10px;
 }
 
     /*responses aka right column*/
@@ -57,9 +58,36 @@
         padding-left:10px;
         border-left: black solid 1px;
         min-height:100%;
+        margin-bottom:10px;
     }
+        /*search results*/
+        #searchResult{
+            
+            /*left:0px;*/
+            padding-bottom:20px;
+        }
 
+    /*    #searchResult.last{
+            padding-bottom:0px;
+            margin-bottom:5px;
+        }
+      */
+        /*Snippets*/
+            #snippets{
+                margin-top:0px;
+                padding-top:0px;
+                margin-left:20px;
+            }
 
+            .snippet{
+                margin-top:0px;
+                padding-top:0px;
+            }
+
+            .snipSep{
+                font-style: italic;
+                font-weight:bold;
+            }
 
 /*Header*/
     #header{
@@ -81,43 +109,13 @@
         width:60px;
     }
 
-
-    label{
-        padding-right:5px;
-    }
-
-    #header form label h1{
+   h1{
         display:inline;
         color:black;
         cursor:hand;
+        padding-right:5px;
     }
 
-
-/*search results*/
-    #searchResult{
-        padding-bottom:20px;
-    }
-
-    #searchResult.last{
-        margin-bottom:5px;
-    }
-    
-    /*Snippets*/
-        #snippets{
-            margin-top:0px;
-            padding-top:0px;
-            margin-left:20px;
-        }
-
-        .snippet{
-            margin-top:0px;
-            padding-top:0px;
-        }
-
-        .snipSep{
-            font-style: italic;
-            font-weight:bold;
-        }
 
 /*Page Nums*/
     .curPage{
