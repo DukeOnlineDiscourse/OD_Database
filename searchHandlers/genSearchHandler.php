@@ -126,12 +126,14 @@ function createBreadCrumb($bcFac,$bcClust){
     foreach($bcFac as $crumb){
         
         $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL()."facetChange=1");
+        $url=preg_replace("/&+/","&",$url);
         $bc.="<span class=\"crumb\"><a href=\"".$url."\">".$crumb." x </a></span>";
     }
     $bc.="</div><div id=\"breadCrumb\">";
     foreach($bcClust as $crumb){
         //echo getCurURL()."<br><br>";
         $url=preg_replace("/clust\[\d+".str_replace(" ","%20",$crumb)."\]\[\]=\d+/","",getCurURL());
+        $url=preg_replace("/&+/","&",$url);
         //echo $url."<br><br>";
         $bc.="<span class=\"crumb\"><a href=\"".$url."\">".$crumb." x </a></span>";
     }
