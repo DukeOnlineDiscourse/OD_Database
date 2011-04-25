@@ -25,7 +25,6 @@ function getClustNum(){
         }
     }
     $clustNum=$clustNum+1;
-    echo $clustNum;
     return $clustNum;
 }
 
@@ -70,9 +69,6 @@ $options = array(
     'LingoClusteringAlgorithm.desiredClusterCountBase'=>6
 );
 
-if($_GET['facetChange']==1){
-    $startResp=1;
-}
 $response = $solr->search($query, 0, 10000,$options);
 
 echo createClusters($response,'');

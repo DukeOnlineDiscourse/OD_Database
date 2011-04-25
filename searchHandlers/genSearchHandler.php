@@ -124,11 +124,13 @@ function createBreadCrumb($bcFac,$bcClust){
     $bc= "<div id=\"breadCrumb\">";
 
     foreach($bcFac as $crumb){
-        $bc.="<span class=\"crumb\">".$crumb."</span>";
+        $url="";
+        $bc.="<span class=\"crumb\"><a href=\"".$url."\">".$crumb."</a></span>";
     }
     $bc.="</div><div id=\"breadCrumb\">";
     foreach($bcClust as $crumb){
-        $bc.="<span class=\"crumb\">".$crumb."</span>";
+        $url="";
+        $bc.="<span class=\"crumb\"><a href=\"".$url."\">".$crumb."</a></span>";
     }
     $bc.="</div>";
     return $bc;
