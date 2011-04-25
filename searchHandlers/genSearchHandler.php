@@ -183,7 +183,7 @@ $endResp=min($startResp-1+$numRows,$numResponses);
 if($numResponses==0){
     echo "No responses found";
 }else{
-    echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses."   ".
+    echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";
 
