@@ -49,7 +49,7 @@ function createClusters($response,$url){
             }
         }
     }else{
-        $clustersDisp.="";//"<div class='facet'>No meaningful clusters generated</div>";
+        $clustersDisp.="<div class='facet'>No clusters generated</div>";
     }
     
     return $clustersDisp."</div>";
