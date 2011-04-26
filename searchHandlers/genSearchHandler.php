@@ -83,9 +83,10 @@ function createFacets($response,$auths){
     }
 
     $facetsDisp="<div id='facets'>";
-    $hiddenContent="<div id='hiddenFacets' style='display:none'>";
     foreach(get_object_vars($response->facet_counts->facet_fields) as $facetName=>$facets){
-        $numDisp=0;
+       $hiddenContent="<div id='hidden".$facetName."' style='display:none'>";
+
+       $numDisp=0;
        $facetsDisp.= "<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
        $hiddenContent.="<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
@@ -101,12 +102,12 @@ function createFacets($response,$auths){
                }
            }
        }
-       $facetsDisp.="</div>";
-       $hiddenContent.="</div>";
+     //  $facetsDisp.=
+      $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetName."\" class=\"thickbox\">
+    Show all ".$facetDislayNames[$facetName]."</a></div>";
+       $hiddenContent.="</div></div>";
     }
-     $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hiddenFacets\" class=\"thickbox\">
-    Show all facets</a></div>";
-    return $facetsDisp.$hiddenContent."</div>";
+    return $facetsDisp."</div>".$hiddenContent;
 }
 
 function getBCClust($clusters){
