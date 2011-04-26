@@ -41,13 +41,13 @@
     }
 
         .facetGroup{
-            margin-top:5px;
             margin-bottom:10px;
         }
 
         .facetGroup p{
             border-bottom:black solid 1px;
-            width: 80%;
+            width: 90%;
+            margin-bottom:3px;
         }
 
             .facet{
@@ -124,6 +124,13 @@
         padding-right:5px;
     }
 
+    #secondHeader{
+        text-align:left;
+        border-bottom-style:solid;
+        border-bottom-color:black;
+        border-bottom-width:2px;
+        margin-bottom:10px;
+    }
 
 /*Page Nums*/
     .curPage{
@@ -163,3 +170,7 @@
             font-size:14px;
             color:#fff;
         }
+
+        .yellow{
+            background-color: #ecf5c5;
+}

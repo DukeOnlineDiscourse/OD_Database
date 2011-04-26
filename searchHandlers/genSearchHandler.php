@@ -87,8 +87,8 @@ function createFacets($response,$auths){
        $hiddenContent="<div id='hidden".$facetName."' style='display:none'>";
 
        $numDisp=0;
-       $facetsDisp.= "<div class='facetGroup'><p>".$facetDislayNames[$facetName]."</p>";
-       $hiddenContent.="<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
+       $facetsDisp.= "<div class=\"facetGroup yellow\"><p>".$facetDislayNames[$facetName]."</p>";
+       $hiddenContent.="<div class=\"facetGroup yellow\">".$facetDislayNames[$facetName]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
            if(!in_array($facet,$chosenFacets)){
                if($count!=0){
@@ -102,10 +102,9 @@ function createFacets($response,$auths){
                }
            }
        }
-     //  $facetsDisp.=
       if($numDisp>=5)
-       $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetName."\" class=\"thickbox\">
-             Show all ".$facetDislayNames[$facetName]."</a>";
+       $facetsDisp.="<div class='facet'>><a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetName."\" class=\"thickbox\">
+             Show all ".$facetDislayNames[$facetName]."</a></div>";
 
         $facetsDisp.="</div>";
        $hiddenContent.="</div></div>";
@@ -200,11 +199,14 @@ $endResp=min($startResp-1+$numRows,$numResponses);
 if($numResponses==0){
     echo "No responses found";
 }else{
+    echo '<div id="secondHeader">';
     echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";
 
    echo createBreadCrumb($breadCrumbFac,$bcClust);
+      echo "</div>";
+
    echo createFacets($response,$auth);
     $responses = array();
     $highlights= array();
