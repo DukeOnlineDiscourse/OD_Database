@@ -32,20 +32,24 @@ function createClusters($response,$url){
     $clustersDisp="";
     $clustersDisp.= "<div class='facetGroup'>Dynamically Created Clusters<br/>";
     $clustNum=getClustNum();
-    foreach($response->clusters as $clusterNum=>$cluster){
-       $numDisp=0;
-       $clusterName=$cluster->labels[0];
-       $count=sizeof($cluster->docs);
-       $docs="";
-       for($i=0;$i<$count;$i++){
-           $docs.="clust[".$clustNum.$cluster->labels[0]."][]=".$cluster->docs[$i]."&";
-       }
-       $docs= substr($docs,0,-1);
-       //sloppy regex used below to make up for a greedy * quantifier. any time startresp is over 5 digits long the replace won't work.
-       $queryString=preg_replace("/&startResp={.,1,5}&/","startResp=1DJ&",$_SERVER['QUERY_STRING']);
-       if($count!=0){
-              $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$queryString."&".$docs."'><p>".$clusterName." (".$count.")</p></a>";
+    if(sizeof($response->clusters)!=1){
+        foreach($response->clusters as $clusterNum=>$cluster){
+           $numDisp=0;
+           $clusterName=$cluster->labels[0];
+           $count=sizeof($cluster->docs);
+           $docs="";
+           for($i=0;$i<$count;$i++){
+               $docs.="clust[".$clustNum.$cluster->labels[0]."][]=".$cluster->docs[$i]."&";
+           }
+           $docs= substr($docs,0,-1);
+           //sloppy regex used below to make up for a greedy * quantifier. any time startresp is over 5 digits long the replace won't work.
+           $queryString=preg_replace("/&startResp={.,1,5}&/","startResp=1DJ&",$_SERVER['QUERY_STRING']);
+           if($count!=0){
+                  $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$queryString."&".$docs."'><p>".$clusterName." (".$count.")</p></a>";
+            }
         }
+    }else{
+        $clustersDisp.="<p>No meaningful clusters generated</p>";
     }
     
     return $clustersDisp."</div>";
