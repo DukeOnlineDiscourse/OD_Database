@@ -103,8 +103,11 @@ function createFacets($response,$auths){
            }
        }
      //  $facetsDisp.=
-      $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetName."\" class=\"thickbox\">
-    Show all ".$facetDislayNames[$facetName]."</a></div>";
+      if($numDisp>=5)
+       $facetsDisp.="<a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetName."\" class=\"thickbox\">
+             Show all ".$facetDislayNames[$facetName]."</a>";
+
+        $facetsDisp.="</div>";
        $hiddenContent.="</div></div>";
     }
     return $facetsDisp."</div>".$hiddenContent;
