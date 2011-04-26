@@ -189,7 +189,8 @@ $options = array(
 if($_GET['facetChange']==1){
     $startResp=1;
 }
-$response = $solr->search($query, $startResp-1, $numRows,$options);
+try{
+    $response = $solr->search($query, $startResp-1, $numRows,$options);
 $numResponses=$response->response->numFound;
 $endResp=min($startResp-1+$numRows,$numResponses);
 if($numResponses==0){
@@ -230,6 +231,9 @@ if($numResponses==0){
                 echo $responses[$i]->format("last");
         }
     echo "</div>";
+}}
+catch(Exception $e){
+    echo "Error in search syntax: ".$query;
 }
 
 
