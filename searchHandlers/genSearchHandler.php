@@ -130,28 +130,22 @@ function createBreadCrumb($bcFac,$bcClust){
 
     for($i=0;$i<sizeof($bcFac);$i++){
         $crumb=$bcFac[$i];
-        $sep="";
-        if($i!=sizeof($bcFac)-1)
-            $sep="<span class=\"bcSep\">,</span>";
         $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL()."facetChange=1");
         $url=preg_replace("/&+/","&",$url);
-        $bc.="<span class=\"crumb yellow\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a>".
-                $sep."</span>";
+        $bc.="<span class=\"crumb yellow\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
     }
     $bc.="";
     for($i=0;$i<sizeof($bcClust);$i++){
         $crumb=$bcClust[$i];
-        $sep="";
         $class="crumb blue";
         if($i!=sizeof($bcClust)-1){
-            $sep="<span class=\"bcSep\">,</span>";
-            $class="bcCrumb blue";
+            $class="bcCrumb crumb blue";
         }
 
         $url=preg_replace("/clust\[\d+".str_replace(" ","%20",$crumb)."\]\[\]=\d+/","",getCurURL());
         $url=preg_replace("/&+/","&",$url);
         $bc.="<span class=\"".$class."\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span>
-                </a>".$sep."</span>
+                </a></span>
                     <div class=\"tooltip\">Please note that all subsequent clusters contain only a subset of the documents in this one.
                         Thus, removing this facet likely will not alter search results.</div>";
     }
