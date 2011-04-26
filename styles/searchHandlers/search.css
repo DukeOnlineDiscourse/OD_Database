@@ -123,3 +123,31 @@
         color:black;
     }
 
+/*breadCrumb*/
+    .removeBox{
+        background-color: #EEE;
+        border: 1px solid black;
+        color: #E00;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 0 3px 2px 3px;
+        vertical-align: 1px;
+        margin-right:2px;
+        margin-left:5px;
+    }
+
+    .bcSep{
+        margin-right:5px;
+    }
+
+
+    /* tooltip styling */
+.tooltip {
+	display:none;
+	background:black;
+	height:100px;
+	padding:5px;
+	width:250px;
+	font-size:14px;
+	color:#fff;
+}

@@ -123,19 +123,32 @@ function getBCClust($clusters){
 function createBreadCrumb($bcFac,$bcClust){
     $bc= "<div id=\"breadCrumb\">";
 
-    foreach($bcFac as $crumb){
-        
+    for($i=0;$i<sizeof($bcFac);$i++){
+        $crumb=$bcFac[$i];
+        $sep="";
+        if($i!=sizeof($bcFac)-1)
+            $sep="<span class=\"bcSep\">,</span>";
         $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL()."facetChange=1");
         $url=preg_replace("/&+/","&",$url);
-        $bc.="<span class=\"crumb\"><a href=\"".$url."\">".$crumb." x </a></span>";
+        $bc.="<span class=\"crumb\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a>".
+                $sep."</span>";
     }
     $bc.="</div><div id=\"breadCrumb\">";
-    foreach($bcClust as $crumb){
-        //echo getCurURL()."<br><br>";
+    for($i=0;$i<sizeof($bcClust);$i++){
+        $crumb=$bcClust[$i];
+        $sep="";
+        $class="crumb";
+        if($i!=sizeof($bcClust)-1){
+            $sep="<span class=\"bcSep\">,</span>";
+            $class="bcCrumb";
+        }
+
         $url=preg_replace("/clust\[\d+".str_replace(" ","%20",$crumb)."\]\[\]=\d+/","",getCurURL());
         $url=preg_replace("/&+/","&",$url);
-        //echo $url."<br><br>";
-        $bc.="<span class=\"crumb\"><a href=\"".$url."\">".$crumb." x </a></span>";
+        $bc.="<span class=\"".$class."\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span>
+                </a>".$sep."</span>
+                    <div class=\"tooltip\">Please note that all subsequent clusters contain only a subset of the documents in this one.
+                        Thus, removing this facet likely will not alter search results.</div>";
     }
     $bc.="</div>";
     return $bc;

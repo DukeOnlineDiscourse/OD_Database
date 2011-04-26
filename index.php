@@ -3,7 +3,7 @@
     $homeArray=array('pages/home.php',array(''),array('styles/home.css'));
     $pages = array(
         'genSearch'=>array('searchHandlers/genSearchHandler.php',
-                            array('js/searchHandlers/genSearchHandler.js',"js/searchHandlers/thickbox-compressed.js"),
+                            array("js/searchHandlers/thickbox-compressed.js", "js/searchHandlers/toolTips.min.js","js/searchHandlers/genSearchHandler.js"),
                             array("styles/searchHandlers/thickbox.css","styles/searchHandlers/search.css")),
         ''=>$homeArray,'home'=>$homeArray);
 
