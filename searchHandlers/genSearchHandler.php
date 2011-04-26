@@ -47,13 +47,19 @@ function createPageLinks($startResp,$numRows,$numResponses){
     $maxPagesToLinkAfter=4;
     $curPageLinks="";
 
+    $first=true;
 for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAfter);$pageNum++){
     if($pageNum<=0){
         continue;
     }else if($pageNum>$totalPages){
         break;
     }
-
+    if($first){
+        $first=false;
+        if($pageNum>1){
+            $curPageLinks.="... ";
+        }
+    }
     if($pageNum==$curPage){
         $class='curPage';
     }else{
@@ -69,6 +75,9 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
     //    echo "<br>".$curURL;
         $curURL= preg_replace($patterns, $replacements, $curURL);
         $curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
+    }
+    if($pageNum<$totalPages){
+        $curPageLinks.=" ...";
     }
     return $curPageLinks;
 }
@@ -128,6 +137,8 @@ function getBCClust($clusters){
 function createBreadCrumb($bcFac,$bcClust){
     $bc= "<div id=\"breadCrumb\">";
 
+    if(sizeof($bcFac)>0)
+    $bc.="<span class='yellow'>Authors: </span>";
     for($i=0;$i<sizeof($bcFac);$i++){
         $crumb=$bcFac[$i];
         $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL()."facetChange=1");
@@ -135,6 +146,10 @@ function createBreadCrumb($bcFac,$bcClust){
         $bc.="<span class=\"crumb yellow\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
     }
     $bc.="";
+
+    if(sizeof($bcClust)>0){
+        $bc.="<span class='blue'>Clusters: </span>";
+    }
     for($i=0;$i<sizeof($bcClust);$i++){
         $crumb=$bcClust[$i];
         $class="crumb blue";
