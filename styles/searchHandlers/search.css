@@ -44,10 +44,10 @@
             margin-bottom:10px;
         }
 
-        .facetGroup p{
+        .facetTitle{
             border-bottom:black solid 1px;
             width: 90%;
-            margin-bottom:3px;
+            padding:3px 3px 2px 3px;
         }
 
             .facet{
@@ -149,16 +149,17 @@
         color: #E00;
         font-size: 11px;
         font-weight: bold;
-        padding: 0 3px 2px 3px;
-        vertical-align: 1px;
-        margin-right:2px;
+        padding: 0px 3px 0px 3px;
+       /* vertical-align: 1px;*/
         margin-left:5px;
+        position:relative;
+        bottom:1px;
     }
 
-    .bcSep{
-        margin-right:5px;
-    }
 
+    .crumb{
+        margin-right: 5px;
+}
 
     /* tooltip styling */
         .tooltip {
@@ -173,4 +174,8 @@
 
         .yellow{
             background-color: #ecf5c5;
-}
+        }
+
+        .blue{
+            background-color: #c5d8f5;
+        }

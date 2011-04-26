@@ -1,6 +1,6 @@
 $().ready(
     function() {
-      $(".bcCrumb").tooltip({ position: "bottom right", opacity: 0.9});
+      $(".bcCrumb").tooltip({ position: "bottom right", opacity: 0.825});
       
       var params=document.URL.split('?')[1];
       $.ajax({

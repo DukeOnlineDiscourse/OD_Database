@@ -87,8 +87,8 @@ function createFacets($response,$auths){
        $hiddenContent="<div id='hidden".$facetName."' style='display:none'>";
 
        $numDisp=0;
-       $facetsDisp.= "<div class=\"facetGroup yellow\"><p>".$facetDislayNames[$facetName]."</p>";
-       $hiddenContent.="<div class=\"facetGroup yellow\">".$facetDislayNames[$facetName]."<br/>";
+       $facetsDisp.= "<div class=\"facetGroup \"><div class='facetTitle yellow'>".$facetDislayNames[$facetName]."</div>";
+       $hiddenContent.="<div class=\"facetGroup\">".$facetDislayNames[$facetName]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
            if(!in_array($facet,$chosenFacets)){
                if($count!=0){
@@ -133,17 +133,17 @@ function createBreadCrumb($bcFac,$bcClust){
             $sep="<span class=\"bcSep\">,</span>";
         $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL()."facetChange=1");
         $url=preg_replace("/&+/","&",$url);
-        $bc.="<span class=\"crumb\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a>".
+        $bc.="<span class=\"crumb yellow\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a>".
                 $sep."</span>";
     }
-    $bc.="</div><div id=\"breadCrumb\">";
+    $bc.="";
     for($i=0;$i<sizeof($bcClust);$i++){
         $crumb=$bcClust[$i];
         $sep="";
-        $class="crumb";
+        $class="crumb blue";
         if($i!=sizeof($bcClust)-1){
             $sep="<span class=\"bcSep\">,</span>";
-            $class="bcCrumb";
+            $class="bcCrumb blue";
         }
 
         $url=preg_replace("/clust\[\d+".str_replace(" ","%20",$crumb)."\]\[\]=\d+/","",getCurURL());
@@ -200,6 +200,7 @@ if($numResponses==0){
     echo "No responses found";
 }else{
     echo '<div id="secondHeader">';
+    echo "Searched for: ".$query."";
     echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
    createPageLinks($startResp,$numRows,$numResponses).
     "</div>";

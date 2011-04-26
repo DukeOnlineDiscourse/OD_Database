@@ -30,7 +30,7 @@ function getClustNum(){
 
 function createClusters($response,$url){
     $clustersDisp="";
-    $clustersDisp.= "<div class='facetGroup'><p>Dynamically Created Clusters</p>";
+    $clustersDisp.= "<div class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div>";
     $clustNum=getClustNum();
     if(sizeof($response->clusters)!=1){
         foreach($response->clusters as $clusterNum=>$cluster){
