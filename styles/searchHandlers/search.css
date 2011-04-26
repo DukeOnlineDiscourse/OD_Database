@@ -124,6 +124,10 @@
     }
 
 /*breadCrumb*/
+#breadCrumb{
+    margin-left:10px;
+    margin-bottom:4px;
+    }
     .removeBox{
         background-color: #EEE;
         border: 1px solid black;
@@ -142,12 +146,12 @@
 
 
     /* tooltip styling */
-.tooltip {
-	display:none;
-	background:black;
-	height:100px;
-	padding:5px;
-	width:250px;
-	font-size:14px;
-	color:#fff;
-}
+        .tooltip {
+            display:none;
+            background:black;
+            height:100px;
+            padding:5px;
+            width:250px;
+            font-size:14px;
+            color:#fff;
+        }
