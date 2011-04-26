@@ -30,7 +30,7 @@ function getClustNum(){
 
 function createClusters($response,$url){
     $clustersDisp="";
-    $clustersDisp.= "<div class='facetGroup'>Dynamically Created Clusters<br/>";
+    $clustersDisp.= "<div class='facetGroup'><p>Dynamically Created Clusters</p>";
     $clustNum=getClustNum();
     if(sizeof($response->clusters)!=1){
         foreach($response->clusters as $clusterNum=>$cluster){
@@ -45,7 +45,7 @@ function createClusters($response,$url){
            //sloppy regex used below to make up for a greedy * quantifier. any time startresp is over 5 digits long the replace won't work.
            $queryString=preg_replace("/&startResp={.,1,5}&/","startResp=1DJ&",$_SERVER['QUERY_STRING']);
            if($count!=0){
-                  $clustersDisp.="<a class='facet' href='http://localhost:8888/ODDemo/genSearch?".$queryString."&".$docs."'><p>".$clusterName." (".$count.")</p></a>";
+                  $clustersDisp.="<div class='facet'><a href='http://localhost:8888/ODDemo/genSearch?".$queryString."&".$docs."'>".$clusterName." (".$count.")</a></div>";
             }
         }
     }else{

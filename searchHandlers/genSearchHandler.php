@@ -87,17 +87,17 @@ function createFacets($response,$auths){
        $hiddenContent="<div id='hidden".$facetName."' style='display:none'>";
 
        $numDisp=0;
-       $facetsDisp.= "<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
+       $facetsDisp.= "<div class='facetGroup'><p>".$facetDislayNames[$facetName]."</p>";
        $hiddenContent.="<div class='facetGroup'>".$facetDislayNames[$facetName]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
            if(!in_array($facet,$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<a class='facet' href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a><br/>";
+                       $facetsDisp.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a></div>";
                        $numDisp++;
-                       $hiddenContent.="<a class='facet' href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a><br/>";
+                       $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a></div>";
                    }else {
-                         $hiddenContent.="<a class='facet' href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a><br/>";
+                         $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a></div>";
                   }
                }
            }

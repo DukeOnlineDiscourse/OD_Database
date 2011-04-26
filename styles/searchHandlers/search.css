@@ -45,12 +45,19 @@
             margin-bottom:10px;
         }
 
-        .facet{
-           text-indent:-10px;
+        .facetGroup p{
+            border-bottom:black solid 1px;
+            width: 80%;
         }
-        .facet p{
-            margin-left:10px;
-}
+
+            .facet{
+               text-indent:-10px;
+               margin-left:10px;
+               display:block;
+            }
+            .facet p{
+                margin-left:10px;
+             }
 
     /*responses aka right column*/
 
