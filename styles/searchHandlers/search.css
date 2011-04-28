@@ -129,8 +129,14 @@
         border-bottom-style:solid;
         border-bottom-color:black;
         border-bottom-width:2px;
+        padding-bottom:4px;
         margin-bottom:10px;
     }
+
+        #pageNums{
+            float:right;
+            padding-right:5px;
+        }
 
 /*Page Nums*/
     .curPage{
@@ -141,7 +147,8 @@
 /*breadCrumb*/
 #breadCrumb{
     margin-left:10px;
-    margin-bottom:4px;
+    margin-bottom:1px;
+    margin-top:1px;
     }
     .removeBox{
         background-color: #EEE;

@@ -32,7 +32,7 @@ function getHighlightedSnippets($response){
 function getCurURL(){
         $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
                     === FALSE ? 'http' : 'https'; //http://www.phpf1.com/tutorial/get-current-page-url.html
-   return str_replace("facetChange=1","",$protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+   return $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }
 
 function createPageLinks($startResp,$numRows,$numResponses){
@@ -85,6 +85,7 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
 function createFacets($response,$auths){
     $facetDislayNames=array('authorFacet'=>"Authors");
     $curURL=getCurURL();
+    $curURL=preg_replace("/startResp\=(\d+)/","startResp=1&",$curURL);
     $numFacets=sizeof($fq);
     $chosenFacets=array();
     foreach ($auths as $existFacet){
@@ -102,11 +103,11 @@ function createFacets($response,$auths){
            if(!in_array($facet,$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a></div>";
+                       $facetsDisp.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."'/>".$facet." (".$count.")</a></div>";
                        $numDisp++;
-                       $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a></div>";
+                       $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."'/>".$facet." (".$count.")</a></div>";
                    }else {
-                         $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."&facetChange=1'/>".$facet." (".$count.")</a></div>";
+                         $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."'/>".$facet." (".$count.")</a></div>";
                   }
                }
            }
@@ -141,7 +142,7 @@ function createBreadCrumb($bcFac,$bcClust){
     $bc.="<span class='yellow'>Authors: </span>";
     for($i=0;$i<sizeof($bcFac);$i++){
         $crumb=$bcFac[$i];
-        $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL()."facetChange=1");
+        $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL());
         $url=preg_replace("/&+/","&",$url);
         $bc.="<span class=\"crumb yellow\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
     }
@@ -201,9 +202,6 @@ $options = array(
     'fq'=>$fq
  );
 
-if($_GET['facetChange']==1){
-    $startResp=1;
-}
 try{
     $response = $solr->search($query, $startResp-1, $numRows,$options);
 $numResponses=$response->response->numFound;
@@ -212,13 +210,11 @@ if($numResponses==0){
     echo "No responses found";
 }else{
     echo '<div id="secondHeader">';
-    echo "Searched for: ".$query."";
-    echo "<div id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
-   createPageLinks($startResp,$numRows,$numResponses).
-    "</div>";
-
-   echo createBreadCrumb($breadCrumbFac,$bcClust);
-      echo "</div>";
+        echo "<span id='searchTerm'>Searched for: ".$query."</span>";
+        echo "<span id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
+            createPageLinks($startResp,$numRows,$numResponses)."</span>";
+        echo createBreadCrumb($breadCrumbFac,$bcClust);
+    echo "</div>";
 
    echo createFacets($response,$auth);
     $responses = array();
