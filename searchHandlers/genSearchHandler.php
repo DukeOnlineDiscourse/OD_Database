@@ -163,7 +163,7 @@ function createBreadCrumb($bcFac,$bcClust){
         $bc.="<span class=\"".$class."\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span>
                 </a></span>
                     <div class=\"tooltip\">Please note that all subsequent clusters contain only a subset of the documents in this one.
-                        Thus, removing this facet likely will not alter search results.</div>";
+                        Thus, removing this facet will not alter search results.</div>";
     }
     $bc.="</div>";
     return $bc;
