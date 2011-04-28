@@ -30,7 +30,6 @@ function getClustNum(){
 
 function createClusters($response,$url){
     $clustersDisp="";
-    $clustersDisp.= "<div class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div>";
     $clustNum=getClustNum();
     if(sizeof($response->clusters)!=1){
         foreach($response->clusters as $clusterNum=>$cluster){
@@ -52,7 +51,7 @@ function createClusters($response,$url){
         $clustersDisp.="<div class='facet'>No clusters generated</div>";
     }
     
-    return $clustersDisp."</div>";
+    return $clustersDisp."";
 }
 $query=$_GET['searchTerm'];
 

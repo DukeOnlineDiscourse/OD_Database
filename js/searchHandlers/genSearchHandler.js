@@ -6,7 +6,8 @@ $().ready(
       $.ajax({
           url: 'searchHandlers/getClusterInfo.php?'+params,
           success: function(data) {
-              $('#facets').append(data);
+              $('#loading').remove();
+              $('#clusters').append(data);
           }
       })
     }

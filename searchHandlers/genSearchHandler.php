@@ -121,7 +121,7 @@ function createFacets($response,$auths){
         $facetsDisp.="</div>";
        $hiddenContent.="</div></div>";
     }
-    return $facetsDisp."</div>".$hiddenContent;
+    return $facetsDisp.$hiddenContent;
 }
 
 function getBCClust($clusters){
@@ -217,6 +217,7 @@ if($numResponses==0){
     echo "</div>";
 
    echo createFacets($response,$auth);
+   echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='/ODDemo/searchHandlers/loading.gif'> </div></div></div>";
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);
