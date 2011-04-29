@@ -30,3 +30,4 @@ function viewAll(){
         <input type=button value="View All Documents" onClick="viewAll()"/>
     <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>
+<a href="/ODDemo/pages/logout.php">Logout</a>

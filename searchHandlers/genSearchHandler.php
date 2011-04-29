@@ -5,6 +5,7 @@
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
 </form>
+    <a href="pages/logout.php">Logout </a>
 </div>
 
 <?php

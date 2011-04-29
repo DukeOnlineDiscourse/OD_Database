@@ -19,12 +19,7 @@ $engage_pro = false;
 /* STEP 1: Extract token POST parameter */
 $token = $_POST['token'];
 
-//Some output to help debugging
-/*echo "SERVER VARIABLES:\n";
-var_dump($_SERVER);
-echo "HTTP POST ARRAY:\n";
-var_dump($_POST);
-*/
+
 if(strlen($token) == 40) {//test the length of the token; it should be 40 characters
 
   /* STEP 2: Use the token to make the auth_info API call */
@@ -65,8 +60,9 @@ if(strlen($token) == 40) {//test the length of the token; it should be 40 charac
       //session_start();
       $_SESSION['login']=1;
       $_SESSION['auth']=1;
-      header('location: '.$_SESSION['url']);
-
+      $url=$_SESSION['url'];
+      $_SESSION['url']='';
+      header('Location: '.$url);
     } else {
       // Gracefully handle auth_info error.  Hook this into your native error handling system.
       echo "\n".'An error occured: ' . $auth_info['err']['msg']."\n";

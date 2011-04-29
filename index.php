@@ -7,13 +7,21 @@ session_start();
         'genSearch'=>array('searchHandlers/genSearchHandler.php',
                             array("js/searchHandlers/thickbox-compressed.js", "js/searchHandlers/toolTips.min.js","js/searchHandlers/genSearchHandler.js"),
                             array("styles/searchHandlers/thickbox.css","styles/searchHandlers/search.css")),
-        ''=>$homeArray,'home'=>$homeArray,'login'=>array('pages/login.php',array('pages/login.js'),array()));
+        'home'=>$homeArray,
+        'login'=>array('pages/login.php',
+                        array('pages/login.js'),
+                        array()
+                ),
+        'logout'=>array('pages/logout.php',
+                        array(),
+                        array(),
+                )
+       );
 
 	/*$curPage = 'home';*/
 	if(isset($_GET['page']))
 		$curPage = $_GET['page'];
 
-	$mainContentFile = '';
 	if(array_key_exists($curPage,$pages)) {
         if(!($_SESSION['login']==1 && $_SESSION['auth']==1)&&$curPage!='login'){
             $_SESSION['url']=$curPage;
