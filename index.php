@@ -24,7 +24,7 @@ session_start();
 
 	if(array_key_exists($curPage,$pages)) {
         if(!($_SESSION['login']==1 && $_SESSION['auth']==1)&&$curPage!='login'){
-            $_SESSION['url']=$curPage;
+            $_SESSION['url']=$curPage.'?'.$_SERVER['QUERY_STRING'];
             header('Location: login');
         }
 		$mainContentFile = $pages[$curPage][0];
