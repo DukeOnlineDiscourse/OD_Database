@@ -14,7 +14,6 @@ require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/core.php";
 require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/solrConn.php";
 require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/SearchResult.php";
 
-/*printer($_SESSION);*/
 function getHighlightedSnippets($response){
     $highlights =array();
     foreach(get_object_vars($response->highlighting) as $id=>$resp){
