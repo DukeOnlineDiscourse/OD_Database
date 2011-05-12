@@ -50,15 +50,20 @@ if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
     $fq=decipherAuths($auth);
 }
+if(isset ($_GET['year'])){
+    $years=$_GET['year'];
+    $fq=decipherYears($years,$fq);
+}
 if(isset($_GET['clust'])){
     $fq=decipherClusts($_GET['clust'],$fq);
 }
 
 
+
 $options = array(
    'fl'=> '*,score',
    'facet'=>'true',
-   'facet.field'=>'authorFacet',
+   'facet.field'=>array('authorFacet', 'sup_year'),
     'fq'=>$fq,
     'qt'=>'/clustering',
     'LingoClusteringAlgorithm.desiredClusterCountBase'=>6

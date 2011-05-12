@@ -8,7 +8,10 @@
 </div>
 
 <?php
+
 $incPath = $_SERVER['DOCUMENT_ROOT']."/OD_Database";
+$facetDislayNames=array('authorFacet'=>array("Authors",'yellow','auth[]','auth'),'sup_year'=>array("Year",'green','year[]','year'));
+$reverseNames =array('auth'=>'authorFacet','year'=>'sup_year');
 require_once  $incPath."/searchHandlers/genSearch.php";
 require_once  $incPath."/Kernel/core.php";
 require_once  $incPath."/Kernel/solrConn.php";
@@ -84,43 +87,49 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
     return $curPageLinks;
 }
 
-function createFacets($response,$auths){
-    $facetDislayNames=array('authorFacet'=>"Authors");
+function createFacets($response,$auths,$years,$facetDislayNames){
+    $colNum=0;
     $curURL=getCurURL();
     $curURL=preg_replace("/startResp\=(\d+)/","startResp=1&",$curURL);
     $chosenFacets=array();
+
     foreach ($auths as $existFacet){
+        $chosenFacets[]=$existFacet;
+    }
+    foreach ($years as $existFacet){
         $chosenFacets[]=$existFacet;
     }
 
     $facetsDisp="<div id='facets'>";
     foreach(get_object_vars($response->facet_counts->facet_fields) as $facetName=>$facets){
-       $hiddenContent="<div id='hidden".$facetName."' style='display:none'>";
+
+       $hiddenContent.="<div id='hidden".$facetDislayNames[$facetName][3]."' style='display:none'>";
 
        $numDisp=0;
-       $facetsDisp.= "<div class=\"facetGroup \"><div class='facetTitle yellow'>".$facetDislayNames[$facetName]."</div>";
-       $hiddenContent.="<div class=\"facetGroup\">".$facetDislayNames[$facetName]."<br/>";
+       $facetsDisp.= "<div class=\"facetGroup \"><div class='facetTitle ".$facetDislayNames[$facetName][1]."'>".$facetDislayNames[$facetName][0]."</div>";
+       $hiddenContent.="<div class=\"facetGroup\">".$facetDislayNames[$facetName][0]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
            if(!in_array($facet,$chosenFacets)){
                if($count!=0){
                    if ($numDisp<5){
-                       $facetsDisp.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."'/>".$facet." (".$count.")</a></div>";
+                       $facetsDisp.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
                        $numDisp++;
-                       $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."'/>".$facet." (".$count.")</a></div>";
+                    $hiddenContent.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
                    }else {
-                         $hiddenContent.="<div class='facet'><a  href='".$curURL."&auth[]=".$facet."'/>".$facet." (".$count.")</a></div>";
+                       $hiddenContent.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
                   }
                }
            }
        }
       if($numDisp>=5)
-        $facetsDisp.="<div class='facet'>><a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetName."\" class=\"thickbox\">
-             Show all ".$facetDislayNames[$facetName]."</a></div>";
+        $facetsDisp.="<div class='facet'>><a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetDislayNames[$facetName][3]."\" class=\"thickbox\">
+             Show all ".$facetDislayNames[$facetName][0]."</a></div>";
       if($numDisp==0){
-        $facetsDisp.="<div class='facet'>No more ".$facetDislayNames[$facetName]."</div>";
+        $facetsDisp.="<div class='facet'>No more ".$facetDislayNames[$facetName][0]."</div>";
       }
         $facetsDisp.="</div>";
        $hiddenContent.="</div></div>";
+       $colNum++;
     }
     return $facetsDisp.$hiddenContent;
 }
@@ -136,18 +145,19 @@ function getBCClust($clusters){
     return $clustNames;
 }
 
-function createBreadCrumb($bcFac,$bcClust){
+function createBreadCrumb($bcFac,$bcClust,$reverseNames,$facetDisplayNames){
     $bc= "<div id=\"breadCrumb\">";
+    foreach($bcFac as $facType=>$facNames){
+        $facetName=$reverseNames[$facType];
+        $bc.="<span class='".$facetDisplayNames[$facetName][1]."'>".$facetDisplayNames[$facetName][0].": </span>";
 
-    if(sizeof($bcFac)>0)
-    $bc.="<span class='yellow'>Authors: </span>";
-    for($i=0;$i<sizeof($bcFac);$i++){
-        $crumb=$bcFac[$i];
-        $url=str_replace("auth[]=".str_replace(" ","%20",$crumb),"",getCurURL());
-        $url=preg_replace("/&+/","&",$url);
-        $bc.="<span class=\"crumb yellow\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
+        foreach($facNames as $facName){
+            $crumb=$facName;
+            $url=str_replace($facetDisplayNames[$facetName][2]."=".str_replace(" ","%20",$crumb),"",getCurURL());
+            $url=preg_replace("/&+/","&",$url);
+            $bc.="<span class=\"crumb ".$facetDisplayNames[$facetName][1]."\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
+        }
     }
-    $bc.="";
 
     if(sizeof($bcClust)>0){
         $bc.="<span class='blue'>Clusters: </span>";
@@ -181,12 +191,22 @@ $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
 
 $auth=array();
+$years=array();
 $breadCrumbFac=array();
 if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
+    $breadCrumbFac['auth']=array();
     $fq=decipherAuths($auth);
     foreach($auth as $author){
-        $breadCrumbFac[]=$author;
+        $breadCrumbFac['auth'][]=$author;
+    }
+}
+if(isset ($_GET['year'])){
+    $years=$_GET['year'];
+    $breadCrumbFac['year']=array();
+    $fq=decipherYears($years,$fq);
+    foreach($years as $year){
+        $breadCrumbFac['year'][]=$year;
     }
 }
 
@@ -205,7 +225,7 @@ $options = array(
    'hl.mergeContiguous'=>'true',
    'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title',
    'facet'=>'true',
-   'facet.field'=>'authorFacet',
+   'facet.field'=>array('authorFacet','sup_year'),
     'fq'=>$fq
  );
 
@@ -220,10 +240,10 @@ if($numResponses==0){
         echo "<span id='searchTerm'>Searched for: ".$query."</span>";
         echo "<span id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
             createPageLinks($startResp,$numRows,$numResponses)."</span>";
-        echo createBreadCrumb($breadCrumbFac,$bcClust);
+        echo createBreadCrumb($breadCrumbFac,$bcClust,$reverseNames,$facetDislayNames);
     echo "</div>";
 
-   echo createFacets($response,$auth);
+   echo createFacets($response,$auth,$years,$facetDislayNames);
    echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='searchHandlers/loading.gif'> </div></div></div>";
     $responses = array();
     $highlights= array();

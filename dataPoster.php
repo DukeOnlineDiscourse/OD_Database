@@ -47,7 +47,7 @@ while($row = mysql_fetch_assoc($result)) {
     }
 
     $url="http://localhost:8983/solr/update/extract?";
-    $params="uprefix=attr_&literal.id=".$id."&literal.sup_title=".$title."&wt=json";
+    $params="uprefix=attr_&literal.id=".$id."&literal.sup_title=".$title."&wt=json&literal.sup_year=".$year;
     foreach($authFin as $author){
         echo $id."auth:".$author."END<br>";
         if($author=="")
