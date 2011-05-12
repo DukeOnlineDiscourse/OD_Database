@@ -1,6 +1,6 @@
 /*General*/
     html, body{
-        margin:0px;
+        margin:0px 10px 0px 10px;
         padding:0px;
         height:100%;
     }
@@ -21,10 +21,6 @@
 
 /*layout*/
     #content{
-        top: 50px;
-        left: 0;
-        right: 0;
-        bottom: 0;
         margin-left: 10px;
         margin-right: 10px;
         text-align:left;
@@ -35,42 +31,54 @@
     /*facets aka left column*/
     #facets{
         float:left;
-        width:250px;
+        width:220px;
         min-height:100%;
-
+	margin-left:20px;
+	padding-right:20px;
     }
 
-        .facetGroup{
-            margin-bottom:10px;
+	.facetGroup{
+		margin-bottom:13px;
         }
 
         .facetTitle{
             border-bottom:black solid 1px;
-            width: 90%;
-            padding:3px 3px 2px 3px;
+            padding:3px 3px 4px 3px;
+	    font-size:16px;
         }
 
             .facet{
-               text-indent:-10px;
-               margin-left:10px;
+               text-indent:-13px;
+               margin-left:13px;
                display:block;
+		margin-bottom:3px;
+		font-size:18px;
             }
             .facet p{
-                margin-left:10px;
+                margin-left:13px;
              }
 
-    /*responses aka right column*/
 
+
+    /*responses aka right column*/
     #responses{
-        margin-left:250px;
-        padding-left:10px;
+        margin-left:270px;
+        padding-left:30px;
         border-left: black solid 1px;
         min-height:100%;
         margin-bottom:10px;
+	font-size:13px;
+	min-width:550px;
+	max-width:750px;
     }
+
+	
+	#responses a{
+		font-size:15px;
+	}
+
         /*search results*/
         #searchResult{
-            
             /*left:0px;*/
             padding-bottom:20px;
         }
@@ -98,17 +106,19 @@
             }
 
 /*Header*/
+
     #header{
+	padding-bottom:5px;
         text-align:left;
         border-bottom-style:solid;
         border-bottom-color:black;
         border-bottom-width:4px;
-        margin-bottom:5px;
+        margin-bottom:8px;
     }
 
     #searchBox{
         width:450px;
-        margin:auto;
+	margin-left:27px;
     }
 
     #searchButton{
@@ -133,10 +143,20 @@
         margin-bottom:10px;
     }
 
+	#searchTerm{
+	    margin-left:300px;
+	}
+
         #pageNums{
             float:right;
             padding-right:5px;
+		vertical-align:top;
         }
+
+	#pageNums a{
+		position:relative;
+		bottom:2.8px;
+	}
 
 /*Page Nums*/
     .curPage{
@@ -146,10 +166,9 @@
 
 /*breadCrumb*/
 #breadCrumb{
-    margin-left:10px;
-    margin-bottom:1px;
-    margin-top:1px;
-    }
+    margin-left:300px;
+    margin-top:4px;
+}
     .removeBox{
         background-color: #EEE;
         border: 1px solid black;
