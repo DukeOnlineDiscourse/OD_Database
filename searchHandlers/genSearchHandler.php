@@ -110,7 +110,7 @@ function createFacets($response,$auths,$years,$facetDislayNames){
        $hiddenContent.="<div class=\"facetGroup\">".$facetDislayNames[$facetName][0]."<br/>";
        foreach(get_object_vars($facets) as $facet=>$count){
            if(!in_array($facet,$chosenFacets)){
-               if($count!=0){
+               if($count!=0&&$facet!="_empty_"){
                    if ($numDisp<5){
                        $facetsDisp.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
                        $numDisp++;
