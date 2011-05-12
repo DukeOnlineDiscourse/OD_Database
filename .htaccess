@@ -1,11 +1,11 @@
 RewriteEngine on
-RewriteBase /
+RewriteBase /OD_Database/
 RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?page=$1 [L,QSA]
-php_flag display_startup_errors on
-php_flag display_errors on
-php_flag html_errors on
-AuthUserFile /Library/WebServer/Documents/DJ/OnlineDiscourse/.passwd
-AuthName "Password Required"
-AuthType Basic
-require valid-user 
+#php_flag display_startup_errors on
+#php_flag display_errors on
+#php_flag html_errors on
+#AuthUserFile /Library/WebServer/Documents/DJ/OnlineDiscourse/.passwd
+#AuthName "Password Required"
+#AuthType Basic
+#require valid-user 
 #AuthGroupFile /www/passwords/group.file

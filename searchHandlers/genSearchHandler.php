@@ -8,10 +8,11 @@
 </div>
 
 <?php
-require_once  $_SERVER['DOCUMENT_ROOT']."/searchHandlers/genSearch.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/core.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/solrConn.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/SearchResult.php";
+$incPath = $_SERVER['DOCUMENT_ROOT']."/OD_Database";
+require_once  $incPath."/searchHandlers/genSearch.php";
+require_once  $incPath."/Kernel/core.php";
+require_once  $incPath."/Kernel/solrConn.php";
+require_once  $incPath."/Kernel/SearchResult.php";
 
 function getHighlightedSnippets($response){
     $highlights =array();
@@ -223,7 +224,7 @@ if($numResponses==0){
     echo "</div>";
 
    echo createFacets($response,$auth);
-   echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='/searchHandlers/loading.gif'> </div></div></div>";
+   echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='searchHandlers/loading.gif'> </div></div></div>";
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);

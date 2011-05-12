@@ -1,8 +1,9 @@
 <?php
-require_once  $_SERVER['DOCUMENT_ROOT']."/SolrPhpClient/Apache/Solr/Service.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/core.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/solrConn.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/searchHandlers/genSearch.php";
+$incPath=$_SERVER['DOCUMENT_ROOT']."/OD_Database";
+require_once  $incPath."/SolrPhpClient/Apache/Solr/Service.php";
+require_once  $incPath."/Kernel/core.php";
+require_once  $incPath."/Kernel/solrConn.php";
+require_once  $incPath."/searchHandlers/genSearch.php";
 
 function getClustNum(){
     $clustNum=-1;
