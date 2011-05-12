@@ -1,18 +1,8 @@
 <?php
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/SolrPhpClient/Apache/Solr/Service.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/core.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/solrConn.php";
-
-require_once 'genSearch.php';
-
-
-$solr = new Apache_Solr_Service(
-            'localhost',
-            '8983',
-            '/solr'
-        );
-
-
+require_once  $_SERVER['DOCUMENT_ROOT']."/SolrPhpClient/Apache/Solr/Service.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/core.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/solrConn.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/searchHandlers/genSearch.php";
 
 function getClustNum(){
     $clustNum=-1;
@@ -32,7 +22,7 @@ function createClusters($response,$url){
     $clustersDisp="";
     $clustNum=getClustNum();
     if(sizeof($response->clusters)!=1){
-        foreach($response->clusters as $clusterNum=>$cluster){
+	foreach($response->clusters as $clusterNum=>$cluster){
            $numDisp=0;
            $clusterName=$cluster->labels[0];
            $count=sizeof($cluster->docs);
@@ -44,7 +34,7 @@ function createClusters($response,$url){
            //sloppy regex used below to make up for a greedy * quantifier. any time startresp is over 5 digits long the replace won't work.
            $queryString=preg_replace("/&startResp={.,1,5}&/","startResp=1DJ&",$_SERVER['QUERY_STRING']);
            if($count!=0){
-                  $clustersDisp.="<div class='facet'><a href='http://localhost:8888/ODDemo/genSearch?".$queryString."&".$docs."'>".$clusterName." (".$count.")</a></div>";
+                  $clustersDisp.="<div class='facet'><a href='genSearch?".$queryString."&".$docs."'>".$clusterName." (".$count.")</a></div>";
             }
         }
     }else{
@@ -54,7 +44,7 @@ function createClusters($response,$url){
     return $clustersDisp."";
 }
 $query=$_GET['searchTerm'];
-
+$fq='';
 if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
     $fq=decipherAuths($auth);
@@ -72,9 +62,12 @@ $options = array(
     'qt'=>'/clustering',
     'LingoClusteringAlgorithm.desiredClusterCountBase'=>6
 );
-
-$response = $solr->search($query, 0, 10000,$options);
-
-echo createClusters($response,'');
-
+try{
+	$response = $solr->search($query, 0, 10000,$options);
+	echo createClusters($response,'');
+}catch(Exception $e){
+	printer($query);
+	printer($options);
+	throw $e;
+}
 ?>

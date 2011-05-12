@@ -7,7 +7,7 @@
                             array("styles/searchHandlers/thickbox.css","styles/searchHandlers/search.css")),
         ''=>$homeArray,'home'=>$homeArray);
 
-	/*$curPage = 'home';*/
+	$curPage = 'home';
 	if(isset($_GET['page']))
 		$curPage = $_GET['page'];
 
@@ -26,7 +26,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Online Discourse Search Engine</title>
         <script type="text/javascript"src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-        <?
+        <?php
           foreach ($csFiles as $csFile){
                 if($csFile!="")
                     echo "<link rel=\"stylesheet\" href=\"".$csFile."\" type=\"text/css\"/>";
@@ -41,7 +41,7 @@
     </head>
     <body> 
         <div id="content">
-            <? 
+            <?php 
             include $mainContentFile; ?>
         </div>
     </body>

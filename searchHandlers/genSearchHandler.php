@@ -1,6 +1,6 @@
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
-        <a href="/ODDemo"><label for="searchTerm"><h1>Online Discourse</h1></label></a><input type="text" name="searchTerm" id="searchBox"/>
+        <a href="/"><label for="searchTerm"><h1>Online Discourse</h1></label></a><input type="text" name="searchTerm" id="searchBox"/>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" name="Search" value="Search" id="searchButton"/>
@@ -8,10 +8,10 @@
 </div>
 
 <?php
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/searchHandlers/genSearch.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/core.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/solrConn.php";
-require_once  $_SERVER['DOCUMENT_ROOT']."/ODDemo/Kernel/SearchResult.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/searchHandlers/genSearch.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/core.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/solrConn.php";
+require_once  $_SERVER['DOCUMENT_ROOT']."/Kernel/SearchResult.php";
 
 function getHighlightedSnippets($response){
     $highlights =array();
@@ -61,10 +61,10 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
         }
     }
     if($pageNum==$curPage){
-        $class='curPage';
+        $class='curPage\' onclick="return false"';
     }else{
         $class="";
-    }
+    } 
         $patterns=array();
         $replacements=array();
 
@@ -76,6 +76,7 @@ for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAf
         $curURL= preg_replace($patterns, $replacements, $curURL);
         $curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
     }
+    
     if($pageNum<$totalPages){
         $curPageLinks.=" ...";
     }
@@ -86,7 +87,6 @@ function createFacets($response,$auths){
     $facetDislayNames=array('authorFacet'=>"Authors");
     $curURL=getCurURL();
     $curURL=preg_replace("/startResp\=(\d+)/","startResp=1&",$curURL);
-    $numFacets=sizeof($fq);
     $chosenFacets=array();
     foreach ($auths as $existFacet){
         $chosenFacets[]=$existFacet;
@@ -168,8 +168,14 @@ function createBreadCrumb($bcFac,$bcClust){
     $bc.="</div>";
     return $bc;
 }
-
-$query=$_GET['filter'].$_GET['searchTerm'];
+$filter='';$searchTerm='';$fq='';
+if (isset($_GET['filter'])){
+	$filter=$_GET['filter'];
+}
+if(isset($_GET['searchTerm'])){
+	$searchTerm=$_GET['searchTerm'];
+}
+$query=$filter.$searchTerm;
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
 
@@ -217,7 +223,7 @@ if($numResponses==0){
     echo "</div>";
 
    echo createFacets($response,$auth);
-   echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='/ODDemo/searchHandlers/loading.gif'> </div></div></div>";
+   echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='/searchHandlers/loading.gif'> </div></div></div>";
     $responses = array();
     $highlights= array();
     $highlights = getHighlightedSnippets($response);

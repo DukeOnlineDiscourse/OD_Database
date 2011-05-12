@@ -28,12 +28,6 @@ class SearchResult {
             $this->snippets=$snippets;
             $this->desc=$desc;
 
-            $this->con = mysql_connect('localhost:8888', 'root', 'root');
-            if (!$this->con)
-              {
-              die('Could not connect: ' . mysql_error());
-              }
-            mysql_select_db("ODDemo", $this->con);
         }
 
         public function format($class=''){
@@ -44,7 +38,7 @@ class SearchResult {
                 </a>
               <div id='snippets'>";
 
-           $secondHalf;
+           $secondHalf='';
            if(sizeof($this->snippets)==0){
               $secondHalf.="<span class=\"snippet\" id=\"".$this->id."\">".trim($this->desc)."</span>";
            }
