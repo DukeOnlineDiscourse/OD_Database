@@ -28,7 +28,7 @@ body{
 }
 
 #homeSearch{
-    width:500px;
+    width:600px;
     margin:auto;
 }
 
@@ -38,7 +38,7 @@ body{
 }
 
 #searchButton{
-    margin-top:10px;
-    padding-top:10px;
+/*    margin-top:10px;
+    padding-top:10px;*?
     width:60px;
 }
