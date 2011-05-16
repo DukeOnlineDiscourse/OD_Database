@@ -179,6 +179,8 @@ function createBreadCrumb($bcFac,$bcClust,$reverseNames,$facetDisplayNames){
     $bc.="</div>";
     return $bc;
 }
+
+
 $filter='';$searchTerm='';$fq='';
 if (isset($_GET['filter'])){
 	$filter=$_GET['filter'];
