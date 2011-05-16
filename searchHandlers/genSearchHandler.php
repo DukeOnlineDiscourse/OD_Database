@@ -9,7 +9,7 @@
 
 <?php
 
-$incPath = $_SERVER['DOCUMENT_ROOT']."/OD_Database";
+$incPath = $_SERVER['DOCUMENT_ROOT']."/DOC";
 $facetDislayNames=array('authorFacet'=>array("Authors",'yellow','auth[]','auth'),'sup_year'=>array("Year",'green','year[]','year'));
 $reverseNames =array('auth'=>'authorFacet','year'=>'sup_year');
 require_once  $incPath."/searchHandlers/genSearch.php";

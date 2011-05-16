@@ -1,5 +1,5 @@
 <?php
-$incPath=$_SERVER['DOCUMENT_ROOT']."/OD_Database";
+$incPath=$_SERVER['DOCUMENT_ROOT']."/DOC";
 require_once  $incPath."/SolrPhpClient/Apache/Solr/Service.php";
 require_once  $incPath."/Kernel/core.php";
 require_once  $incPath."/Kernel/solrConn.php";
