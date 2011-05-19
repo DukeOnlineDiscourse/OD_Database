@@ -4,4 +4,9 @@ require_once $incPath."/SolrPhpClient/Apache/Solr/Service.php";
             'localhost',
             '8080',
             '/solr');
+
+ if ( !$solr->ping() ) {
+    echo 'Solr service not responding.';
+    exit;
+  }
 ?>

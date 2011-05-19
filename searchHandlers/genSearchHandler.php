@@ -3,13 +3,13 @@
         <a href="/"><label for="searchTerm"><h1>Online Discourse</h1></label></a><input type="text" name="searchTerm" id="searchBox"/>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
-        <input type="submit" name="Search" value="Search" id="searchButton"/>
+        <input type="submit" id="searchButton"/>
 </form>
 </div>
 
 <?php
 
-$incPath = $_SERVER['DOCUMENT_ROOT']."/DOC";
+$incPath = $_SERVER['DOCUMENT_ROOT']."";
 $facetDislayNames=array('authorFacet'=>array("Authors",'yellow','auth[]','auth'),'sup_year'=>array("Year",'green','year[]','year'));
 $reverseNames =array('auth'=>'authorFacet','year'=>'sup_year');
 require_once  $incPath."/searchHandlers/genSearch.php";
@@ -17,10 +17,14 @@ require_once  $incPath."/Kernel/core.php";
 require_once  $incPath."/Kernel/solrConn.php";
 require_once  $incPath."/Kernel/SearchResult.php";
 
+/**
+ * Parses a SOLR response and associates the hits with the id of the document they're associated with.
+ * A hit is the portion of an document which the search query matches.
+ *
+ */
 function getHighlightedSnippets($response){
     $highlights =array();
     foreach(get_object_vars($response->highlighting) as $id=>$resp){
-           //echo"ID: ";
         $hlFields=get_object_vars($resp);
         $filledInFields=array();
 
@@ -33,66 +37,69 @@ function getHighlightedSnippets($response){
     return $highlights;
 }
 
+/*
+ * Returns the exact URL bing requested by the client.
+ * Used to create links for next apge, facets, etc.
+ *
+ */
 function getCurURL(){
         $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
                     === FALSE ? 'http' : 'https'; //http://www.phpf1.com/tutorial/get-current-page-url.html
    return $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }
 
-function createPageLinks($startResp,$numRows,$numResponses){
+/*
+ * Creates the page links to be displayed on the top right of the page.
+ * Returns a string with a span containing all of the info.
+ */
+function createPageLinks($startResp,$numRows,$numResponses,$endResp){
+    $curPageLinks="<span id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ";
 
     $curURL= getCurURL();
-    //searchTerm=id%3A69&filter=&startResp=0&numRows=5&Search=Search
-
     $totalPages=ceil($numResponses/$numRows);
     $curPage = ceil($startResp/$numRows);
+    $first=true;
 
     $maxPagesToLinkBefore=3;
     $maxPagesToLinkAfter=4;
-    $curPageLinks="";
 
-    $first=true;
-for($pageNum=$curPage-$maxPagesToLinkBefore;$pageNum<($curPage+$maxPagesToLinkAfter);$pageNum++){
-    if($pageNum<=0){
-        continue;
-    }else if($pageNum>$totalPages){
-        break;
-    }
-    if($first){
-        $first=false;
-        if($pageNum>1){
-            $curPageLinks.="... ";
-        }
-    }
-    if($pageNum==$curPage){
-        $class='curPage\' onclick="return false"';
-    }else{
-        $class="";
-    } 
-        $patterns=array();
-        $replacements=array();
+    $pageNum=max($curPage-$maxPagesToLinkBefore,1);
+    $endPage=min($curPage+$maxPagesToLinkAfter,$totalPages+1);
 
-        $patterns[]="/startResp\=(\d+)/";
-        $startResp=($pageNum-1)*($numRows)+1;
-    //    echo "<br> Start Resp page".$startResp;
-        $replacements[]="startResp=".$startResp;
-    //    echo "<br>".$curURL;
-        $curURL= preg_replace($patterns, $replacements, $curURL);
-        $curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
-    }
+	for($pageNum;$pageNum<$endPage;$pageNum++){
+		if($first){
+			$first=false;
+			if($pageNum>1){
+				$curPageLinks.="... ";
+			}
+		}
+		if($pageNum==$curPage){
+			$class='curPage\' onclick="return false"';
+		}else{
+			$class="";
+		} 
+		$startResp=($pageNum-1)*($numRows)+1;
+		$curURL= preg_replace("/startResp\=(\d+)/", "startResp=".$startResp, $curURL);
+		$curPageLinks.="<a href='".$curURL."' class='".$class."'>".$pageNum." </a> ";
+	}
     
     if($pageNum<$totalPages){
         $curPageLinks.=" ...";
     }
-    return $curPageLinks;
+    return $curPageLinks."</span>";
 }
 
+/**
+ * Facets are being created and displayed.
+ * Format of facetDislayNames is solr_name=>[Human Readable, color, php name (ie year[]),hideenFacet Name ]
+ */
 function createFacets($response,$auths,$years,$facetDislayNames){
-    $colNum=0;
+    //New facets should always point to the first page of results.
     $curURL=getCurURL();
     $curURL=preg_replace("/startResp\=(\d+)/","startResp=1&",$curURL);
-    $chosenFacets=array();
 
+
+    //Save which facets have already been chosen to avoid displaying them as an option again.
     foreach ($auths as $existFacet){
         $chosenFacets[]=$existFacet;
     }
@@ -101,41 +108,66 @@ function createFacets($response,$auths,$years,$facetDislayNames){
     }
 
     $facetsDisp="<div id='facets'>";
+
+    //Loop through every facet field returned by SOLR...ie AuthorFacet->AuthorNames[]
     foreach(get_object_vars($response->facet_counts->facet_fields) as $facetName=>$facets){
 
+	//Hidden Content is used to power the "view all facets" functionality"
        $hiddenContent.="<div id='hidden".$facetDislayNames[$facetName][3]."' style='display:none'>";
 
        $numDisp=0;
+
+       //Create the div for the current facet group.
        $facetsDisp.= "<div class=\"facetGroup \"><div class='facetTitle ".$facetDislayNames[$facetName][1]."'>".$facetDislayNames[$facetName][0]."</div>";
        $hiddenContent.="<div class=\"facetGroup\">".$facetDislayNames[$facetName][0]."<br/>";
+
+       //Loop through every facet in the current facet group 
        foreach(get_object_vars($facets) as $facet=>$count){
-           if(!in_array($facet,$chosenFacets)){
-               if($count!=0&&$facet!="_empty_"){
+           //make sure the current facet is not already being used and make sure the current facet contains articles
+           if((!in_array($facet,$chosenFacets)) && ($count!=0&&$facet!="_empty_")){
+                   //only display the first five facets
+                   $facetLink="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
+                   $hiddenContent.=$facetLink;
                    if ($numDisp<5){
-                       $facetsDisp.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
+                       $facetsDisp.= $facetLink; 
                        $numDisp++;
-                    $hiddenContent.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
-                   }else {
-                       $hiddenContent.="<div class='facet'><a  href='".$curURL."&".$facetDislayNames[$facetName][2]."=".$facet."'/>".$facet." (".$count.")</a></div>";
-                  }
-               }
+                   }
            }
        }
+
+      //handle Edge cases
       if($numDisp>=5)
         $facetsDisp.="<div class='facet'>><a href=\"#TB_inline?height=155&width=300&inlineId=hidden".$facetDislayNames[$facetName][3]."\" class=\"thickbox\">
              Show all ".$facetDislayNames[$facetName][0]."</a></div>";
       if($numDisp==0){
         $facetsDisp.="<div class='facet'>No more ".$facetDislayNames[$facetName][0]."</div>";
       }
-        $facetsDisp.="</div>";
+        
+      //Close out the divs.
+       $facetsDisp.="</div>";
        $hiddenContent.="</div></div>";
-       $colNum++;
     }
     return $facetsDisp.$hiddenContent;
 }
 
+
+/**
+ * A function used to parse the request to find out what clusters are being used and thus belong in the breadcrumb (BC).
+ * Example $cluster: 
+	Array
+	(
+	    [0ICANN MoU] => Array
+		(
+		    [0] => 213
+		    [1] => 220
+		    [2] => 219
+		    [3] => 215
+		)
+	)
+ * It works by going through every cluster in $cluster and cutting off the leading digits. IE 0ICANN MoU ->ICANN MoU
+ * 
+ */
 function getBCClust($clusters){
-    $clustNames=array();
     $count=0;
     foreach($clusters as $clusterName=>$docs){
         $numDigits=floor($count/10)+1;
@@ -145,20 +177,29 @@ function getBCClust($clusters){
     return $clustNames;
 }
 
+/**
+ * Used to create the breadcrubm displayed at the top of the screen.
+ *
+ */
 function createBreadCrumb($bcFac,$bcClust,$reverseNames,$facetDisplayNames){
     $bc= "<div id=\"breadCrumb\">";
+
+    //Handle standard facets by looping through each facet type (author, year, etc) and the chosen ones.
     foreach($bcFac as $facType=>$facNames){
+        //associate the php array name with display name. IE auth -> Authors
         $facetName=$reverseNames[$facType];
+
         $bc.="<span class='".$facetDisplayNames[$facetName][1]."'>".$facetDisplayNames[$facetName][0].": </span>";
 
+	//Loop through each chosen facet of facType and display it.
         foreach($facNames as $facName){
-            $crumb=$facName;
-            $url=str_replace($facetDisplayNames[$facetName][2]."=".str_replace(" ","%20",$crumb),"",getCurURL());
+            $url=str_replace($facetDisplayNames[$facetName][2]."=".str_replace(" ","%20",$facName),"",getCurURL());
             $url=preg_replace("/&+/","&",$url);
-            $bc.="<span class=\"crumb ".$facetDisplayNames[$facetName][1]."\">".$crumb."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
+            $bc.="<span class=\"crumb ".$facetDisplayNames[$facetName][1]."\">".$facName."<a href=\"".$url."\"><span class=\"removeBox\">x</span></a></span>";
         }
     }
 
+    //clusters neeed to be handled separately.
     if(sizeof($bcClust)>0){
         $bc.="<span class='blue'>Clusters: </span>";
     }
@@ -180,21 +221,26 @@ function createBreadCrumb($bcFac,$bcClust,$reverseNames,$facetDisplayNames){
     return $bc;
 }
 
+/**
+ * Used to create the second header (breadcrumb, page links, etc)
+ *
+ */
+function createSecondHeader($query, $startResp,$numRows,$numResponses,$endResp,$breadCrumbFac,$bcClust,$reverseNames,$facetDislayNames){
+    $secondHeader= '<div id="secondHeader">';
+        $secondHeader.= "<span id='searchTerm'>Searched for: ".$query."</span>";
+        $secondHeader.= createPageLinks($startResp,$numRows,$numResponses,$endResp);
+        $secondHeader.= createBreadCrumb($breadCrumbFac,$bcClust,$reverseNames,$facetDislayNames);
+    return $secondHeader."</div>";
+}
 
-$filter='';$searchTerm='';$fq='';
-if (isset($_GET['filter'])){
-	$filter=$_GET['filter'];
-}
-if(isset($_GET['searchTerm'])){
-	$searchTerm=$_GET['searchTerm'];
-}
-$query=$filter.$searchTerm;
+//initialize some variables
+$query=$_GET['filter'].$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
 
-$auth=array();
-$years=array();
-$breadCrumbFac=array();
+$fq; //used as the filter for the solr query.
+$breadCrumbFac; //used to keep track of chosen facets/clusters and create the breadcrumb
+//add all of the authors to $breadCrumbFac and to $fq
 if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
     $breadCrumbFac['auth']=array();
@@ -203,6 +249,8 @@ if(isset ($_GET['auth'])){
         $breadCrumbFac['auth'][]=$author;
     }
 }
+
+//add all years to $breadCrumbFac and to $fq
 if(isset ($_GET['year'])){
     $years=$_GET['year'];
     $breadCrumbFac['year']=array();
@@ -212,38 +260,34 @@ if(isset ($_GET['year'])){
     }
 }
 
+//add all clusters to fq and create the chosen clusters list, bcClust
 $bcClust=array();
 if(isset($_GET['clust'])){
     $fq=decipherClusts($_GET['clust'],$fq);
     $bcClust=getBCClust($_GET['clust']);
-
 }
 
+//the options to be used in the solr query
 $options = array(
    'fl'=> '*,score',
-   'hl'=> 'on',
-   'hl.maxAnalyzedChars'=>-1,
+   'hl'=> 'on', //use highlighting
+   'hl.maxAnalyzedChars'=>-1, //ananlyze as many characters as needed
    'hl.snippets'=>3,
    'hl.mergeContiguous'=>'true',
-   'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title',
-   'facet'=>'true',
-   'facet.field'=>array('authorFacet','sup_year'),
-    'fq'=>$fq
+   'hl.fl'=>'attr_stream_name,authors,body,desc,subject,sup_title', //fields to highlight based on
+   'facet'=>'true', //facet the results
+   'facet.field'=>array('authorFacet','sup_year'), //fields to facet on
+   'fq'=>$fq //a filter for the query; used for faceting/clustering
  );
 
 try{
     $response = $solr->search($query, $startResp-1, $numRows,$options);
-$numResponses=$response->response->numFound;
-$endResp=min($startResp-1+$numRows,$numResponses);
-if($numResponses==0){
+    $numResponses=$response->response->numFound;
+    $endResp=min($startResp-1+$numRows,$numResponses);
+   if($numResponses==0){
     echo "No responses found";
-}else{
-    echo '<div id="secondHeader">';
-        echo "<span id='searchTerm'>Searched for: ".$query."</span>";
-        echo "<span id='pageNums'> Showing responses ".($startResp)."-".$endResp." of ".$numResponses.":   ".
-            createPageLinks($startResp,$numRows,$numResponses)."</span>";
-        echo createBreadCrumb($breadCrumbFac,$bcClust,$reverseNames,$facetDislayNames);
-    echo "</div>";
+   }else{
+	echo createSecondHeader($query, $startResp,$numRows,$numResponses,$endResp,$breadCrumbFac,$bcClust,$reverseNames,$facetDislayNames);
 
    echo createFacets($response,$auth,$years,$facetDislayNames);
    echo "<div id='clusters' class='facetGroup'><div class='facetTitle blue'>Dynamically Created Clusters</div><div class='facet' id='loading'> <img src='searchHandlers/loading.gif'> </div></div></div>";

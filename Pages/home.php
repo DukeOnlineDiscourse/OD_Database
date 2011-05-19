@@ -28,5 +28,5 @@ function viewAll(){
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <!--<input type=button value="View All Documents" onClick="viewAll()"/>-->
-    <input type="submit" name="Search" value="Search" id="searchButton"/>
+    <input type="submit" id="searchButton"/>
 </form>

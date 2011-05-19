@@ -23,7 +23,7 @@ function decipherYears($years, $fq){
 
     for($i=0;$i<sizeof($years);$i++){
         if(!$first){
-            $fq=$fq." AND sup_year:\"".$years[$i]."\"";
+            $fq=$fq." OR sup_year:\"".$years[$i]."\"";
         }else{
             $fq.=" (sup_year:\"".$years[$i]."\"";
             $first=false;

@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+[branch "master"]
+[branch "openId"]
+[branch "unFuncClusters"]
+[remote "origin"]
+	url = git@github.com:DukeOnlineDiscourse/OD_Database.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
