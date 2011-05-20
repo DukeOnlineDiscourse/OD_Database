@@ -45,10 +45,10 @@ function createClusters($response,$url){
     return $clustersDisp."";
 }
 $query=$_GET['searchTerm'];
-$fq='';
+$fq= "db:".$_GET['db']." AND ";//used as the filter for the solr query.;
 if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
-    $fq=decipherAuths($auth);
+    $fq=decipherAuths($auth,$fq);
 }
 if(isset ($_GET['year'])){
     $years=$_GET['year'];

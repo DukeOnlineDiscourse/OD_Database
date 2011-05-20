@@ -25,6 +25,10 @@ function viewAll(){
             <option value="body:">Body</option>
             <option value="author:">Author</option>
         </select>-->
+<select name="db">
+	<option value="od">Online Discourse</option>
+	<option value="fake">Fake Database</option>
+</select>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <!--<input type=button value="View All Documents" onClick="viewAll()"/>-->

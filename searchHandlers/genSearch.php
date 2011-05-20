@@ -1,9 +1,8 @@
 <?php
 
 $facetDislayNames=array('authorFacet'=>array("Authors",'yellow','auth[]','auth'),'sup_year'=>array("Years",'green','year[]','year'));
-function decipherAuths($auth){
+function decipherAuths($auth, $fq){
     $first=true;
-    $fq='';
     for($i=0;$i<sizeof($auth);$i++){
         if(!$first){
             $fq=$fq." AND authorFacet:\"".$auth[$i]."\"";

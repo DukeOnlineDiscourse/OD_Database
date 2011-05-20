@@ -234,17 +234,17 @@ function createSecondHeader($query, $startResp,$numRows,$numResponses,$endResp,$
 }
 
 //initialize some variables
-$query=$_GET['filter'].$_GET['searchTerm'];
+$query=$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
+$fq= "db:".$_GET['db']." AND ";//used as the filter for the solr query.;
 
-$fq; //used as the filter for the solr query.
 $breadCrumbFac; //used to keep track of chosen facets/clusters and create the breadcrumb
 //add all of the authors to $breadCrumbFac and to $fq
 if(isset ($_GET['auth'])){
     $auth=$_GET['auth'];
     $breadCrumbFac['auth']=array();
-    $fq=decipherAuths($auth);
+    $fq=decipherAuths($auth,$fq);
     foreach($auth as $author){
         $breadCrumbFac['auth'][]=$author;
     }
