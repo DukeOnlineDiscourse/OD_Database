@@ -29,12 +29,23 @@ class SearchResult {
             $this->desc=$desc;
 
         }
-
+	
+	private function printAuthor(){
+		$auths="";
+		if(is_array($this->author)){
+			foreach($this->author as $auth){
+				$auths.=$auth.",";
+			}
+		}else{
+			$auths=$this->author;
+		}
+		return $auths;
+	}
         public function format($class=''){
           $firstHalf= "
               <div id='searchResult' class='".$class."'>
                 <a href='".$this->url."'>
-                   <span class='searchHeader'>".$this->title." by ".$this->author."</span>
+                   <span class='searchHeader'>".$this->title." by ".$this->printAuthor()."</span>
                 </a>
               <div id='snippets'>";
 
