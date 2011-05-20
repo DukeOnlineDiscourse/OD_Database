@@ -5,11 +5,19 @@ require_once  $incPath."/Kernel/core.php";
 //Check for solr instance being on
 $filename=$_FILES['fileName']['tmp_name'];
 
+$delimiter="http";
+
 $online=$_POST['online'];
+$beg="";
+if($online=='myfile'){
+	$delimiter="___$";
+}else
+	$beg=$delimiter;
+
 $handle=fopen($filename, "r");
 $contents = fread($handle, filesize($filename));
-$contents=explode("http",$contents);
-
+$contents=explode($delimiter,$contents);
+printer($contents);
 foreach($contents as $row){
     if($row==""){
         echo "empty row<br><br>";
@@ -17,7 +25,7 @@ foreach($contents as $row){
     }
     $row=explode("|",$row);
     $title=urlencode($row[1]);
-    $source=urlencode("http".trim($row[0]));
+    $source=urlencode($beg.trim($row[0]));
     $desc=urlencode($row[5]);
     $year=urlencode($row[3]);
     $tempAuths=substr($row[2],1,-1);

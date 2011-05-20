@@ -283,6 +283,8 @@ $options = array(
    'facet.field'=>array('authorFacet','sup_year'), //fields to facet on
    'fq'=>$fq //a filter for the query; used for faceting/clustering
  );
+//fq is a boolean filter for solr
+//printer($fq);
 
 try{
     $response = $solr->search($query, $startResp-1, $numRows,$options);
