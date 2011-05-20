@@ -7,7 +7,7 @@ function decipherAuths($auth, $fq){
         if(!$first){
             $fq=$fq." AND authorFacet:\"".$auth[$i]."\"";
         }else{
-            $fq.="(authorFacet:\"".$auth[$i]."\"";
+            $fq.=" AND (authorFacet:\"".$auth[$i]."\"";
             $first=false;
         }
     }
@@ -17,14 +17,14 @@ function decipherAuths($auth, $fq){
 
 function decipherYears($years, $fq){
     $first=true;
-    if($fq!='')
+    /*if($fq!='')
         $fq.=" AND ";
-
+*/
     for($i=0;$i<sizeof($years);$i++){
         if(!$first){
             $fq=$fq." OR sup_year:\"".$years[$i]."\"";
         }else{
-            $fq.=" (sup_year:\"".$years[$i]."\"";
+            $fq.=" AND (sup_year:\"".$years[$i]."\"";
             $first=false;
         }
     }
@@ -39,7 +39,7 @@ function decipherClusts($clusts,$fq){
         $first =true;
         for($i=0;$i<sizeof($clust);$i++){
             if(!$first)
-                $fq.="OR id:\"".$clust[$i]."\"";
+                $fq.=" OR id:\"".$clust[$i]."\"";
             else{
                 $fq.="(id:\"".$clust[$i]."\"";
                 $first=false;

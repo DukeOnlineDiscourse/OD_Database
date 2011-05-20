@@ -1,6 +1,10 @@
 <div id="header">
     <form method="get" action="genSearch" id="headerSearch" onsubmit="return validateForm()">
         <a href="/"><label for="searchTerm"><h1>Online Discourse</h1></label></a><input type="text" name="searchTerm" id="searchBox"/>
+<select name="db">
+	<option value="od">Online Discourse</option>
+	<option value="fake">Fake Database</option>
+</select>
         <input type="hidden" name="startResp" value="1"/>
         <input type="hidden" name="numRows" value="5"/>
         <input type="submit" id="searchButton"/>
@@ -237,7 +241,7 @@ function createSecondHeader($query, $startResp,$numRows,$numResponses,$endResp,$
 $query=$_GET['searchTerm'];
 $startResp = $_GET['startResp'];
 $numRows = $_GET['numRows'];
-$fq= "db:".$_GET['db']." AND ";//used as the filter for the solr query.;
+$fq= "db:".$_GET['db'];//used as the filter for the solr query.;
 
 $breadCrumbFac; //used to keep track of chosen facets/clusters and create the breadcrumb
 //add all of the authors to $breadCrumbFac and to $fq
@@ -319,6 +323,7 @@ try{
 }}
 catch(Exception $e){
     echo "Error in search syntax: ".$query;
+printer($e);
 }
 
 
