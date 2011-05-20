@@ -12,10 +12,15 @@ and open the template in the editor.
       <form method="post"enctype="multipart/form-data" action="articlePosterHandler.php">
           Choose the csv file you want to upload: <input name="fileName" type="file"/>
 	<input type="hidden" name="MAX_FILE_SIZE" value="3000000000" />
-        <input type="submit"/></br>
+<select name="online">
+	<option value="stream.url">Online</option>
+	<option value="myfile">Local</option>
+</select>
+        <input type="submit"/></br><br>
          The csv file should use | as a delimiter instead of a comma. It should also be stripped of the heading row.<br>
          There shouldn't be any |'s in the text other than the delimiters.<br>
-         Each row is expected to begin with http.
+         For Online articles, each row is expected to begin with http.<br>
+	Local articles haven't been implemented yet. It's just a matter of choosing a standard delimiter for each row to begin with <br>.
       </form>
   </body>
 </html>

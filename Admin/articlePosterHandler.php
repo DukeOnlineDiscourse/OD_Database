@@ -4,6 +4,8 @@ require_once  $incPath."/Kernel/core.php";
 //print_r($_FILES);
 //Check for solr instance being on
 $filename=$_FILES['fileName']['tmp_name'];
+
+$online=$_POST['online'];
 $handle=fopen($filename, "r");
 $contents = fread($handle, filesize($filename));
 $contents=explode("http",$contents);
@@ -20,6 +22,10 @@ foreach($contents as $row){
     $year=urlencode($row[3]);
     $tempAuths=substr($row[2],1,-1);
     $tempAuths=explode(";",$tempAuths);
+    $db=trim($row[9]);
+if($db==""){
+$db="od";
+}
     $authors="";
     foreach($tempAuths as $author){
         $author=explode(",",$author);
@@ -28,11 +34,11 @@ foreach($contents as $row){
 
     $url="http://localhost:8080/solr/update/extract?";
 
-    $params="uprefix=attr_"."&literal.sup_title=".$title."&wt=json&literal.id=".$source."&literal.sup_title=".$title."&wt=json&literal.sup_year=".$year;
+    $params="uprefix=attr_"."&literal.sup_title=".$title."&wt=json&literal.id=".$source."&literal.sup_title=".$title."&wt=json&literal.sup_year=".$year."&literal.db=".$db;
     foreach($authors as $author){
         $params.="&literal.authors=".urlencode($author);
     }
-    $params.="&stream.url=".$source;
+    $params.="&".$online."=".$source;
 
     $url.=$params;
 
